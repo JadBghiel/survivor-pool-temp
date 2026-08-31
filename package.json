@@ -1,0 +1,46 @@
+{
+  "name": "geoemploi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate",
+    "db:local": "docker start geoemploi-db 2>/dev/null || docker run -d --name geoemploi-db -e POSTGRES_PASSWORD=local -e POSTGRES_DB=geoemploi -p 55432:5432 postgres:16",
+    "db:local:stop": "docker stop geoemploi-db"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^1.6.1",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@scalar/hono-api-reference": "^0.9.48",
+    "dotenv": "^17.4.2",
+    "hono": "^4.13.5",
+    "next": "15.5.24",
+    "pg": "^8.23.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.24",
+    "prisma": "^7.10.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.13",
+    "typescript": "^5"
+  }
+}
