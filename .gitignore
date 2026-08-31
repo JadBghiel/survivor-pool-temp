@@ -1,0 +1,49 @@
+# ---- dependencies ----
+/node_modules
+/.pnp
+.pnp.*
+
+# ---- build output ----
+/.next/
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# ---- prisma ----
+# the client is generated from schema.prisma on every install and build.
+# committing it would mean a huge diff on every schema change, and it is
+# platform specific. `npm run build` regenerates it on vercel.
+/src/generated
+
+# ---- env ----
+# every .env variant is secret. DATABASE_URL contains the db password.
+.env
+.env.*
+# except the template, which documents the variables without their values
+!.env.example
+
+# ---- vercel ----
+.vercel
+
+# ---- editors / os ----
+.DS_Store
+Thumbs.db
+*.pem
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# ---- logs ----
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+/coverage
+
+# ---- agent skills dropped in by `prisma init` ----
+# useful locally, noise in the repo
+/.agents
+/.windsurf
+/.claude/skills
+/skills-lock.json
