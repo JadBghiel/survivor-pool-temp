@@ -113,3 +113,32 @@ right where you left off, no need to migrate or seed twice.
 this local database is completely separate from the one on vercel. testing
 here, however much you break it, cannot affect the live site.
 
+
+
+## TODO
+
+### Jad:
+
+- [ ] geocoding function: address + city + postalCode in, { latitude, longitude } out
+      calls nominatim api server side, rate limited
+- [ ] geocoding error handling (failure etc)
+    handle all three geolocation outcomes: denied, unavailable, timeout
+    fallback in every case is just the unfiltered map
+- [ ] browser geolocation: "find jobs near me" button, explicit click only
+- [ ] privacy notice text next to that button
+      to be gdpr compliant
+- [ ] haversine distance function: point to point, plain math
+- [ ] nearby jobs query: given a point + a radius, return jobs sorted by distance
+- [ ] coords validation: same -90/90 and -180/180 bounds as the bbox schema (emma part i think)
+
+for later:
+- [ ] wiring the geocoding function into the actual publish ajob form/endpoint on the website, we will make it avaiable wehn singining in a as a employer
+
+### Nico:
+- [] user/seeker account creation (OAuth2)
+
+### Emma:
+- [] Map
+
+
+
