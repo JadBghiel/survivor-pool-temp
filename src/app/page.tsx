@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { LocateMeButton } from '@/components/LocateMeButton'
 
 // the db is read per request, never at build time. milestone 1 replaces this
 // whole page with the leaflet map and this list becomes the mobile bottom sheet.
@@ -32,6 +33,10 @@ export default async function Home() {
             Documentation de l&apos;API
           </a>
         </p>
+        {/* temporary spot, milestone 1 moves this button onto the map itself */}
+        <div className="mt-4">
+          <LocateMeButton />
+        </div>
       </header>
 
       {jobs.length === 0 ? (
