@@ -33,6 +33,22 @@ export const BboxQuerySchema = z.object({
   maxLng: z.coerce.number().min(-180).max(180).optional().openapi({ example: 2.5 }),
 })
 
+// the "find jobs near me" query: a point plus how far someone is willing to
+// travel. all three are required, this endpoints whole reason to exist is
+// a point and a radius, unlike the bbox query above where every field is
+// optional
+export const NearbyQuerySchema = z.object({
+  lat: z.coerce.number().min(-90).max(90).openapi({ example: 47.2135 }),
+  lng: z.coerce.number().min(-180).max(180).openapi({ example: -1.5545 }),
+  radiusKm: z.coerce.number().positive().max(200).openapi({ example: 25 }),
+})
+
+export const JobNearbySchema = JobSummarySchema.extend({
+  distanceKm: z.number().openapi({ example: 3.2 }),
+}).openapi('JobNearby')
+
+export const JobNearbyListSchema = z.array(JobNearbySchema).openapi('JobNearbyList')
+
 export const ErrorSchema = z
   .object({ error: z.string().openapi({ example: 'not found' }) })
   .openapi('Error')
