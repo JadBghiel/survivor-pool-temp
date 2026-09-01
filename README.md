@@ -119,12 +119,18 @@ here, however much you break it, cannot affect the live site.
 
 ### Jad:
 
-- [ ] geocoding function: address + city + postalCode in, { latitude, longitude } out
-      calls nominatim api server side, rate limited
-- [ ] geocoding error handling (failure etc)
-    handle all three geolocation outcomes: denied, unavailable, timeout
-    fallback in every case is just the unfiltered map
+- [x] geocoding function: address + city + postalCode in, { latitude, longitude } out
+      calls nominatim api server side, rate limited (1.1s between calls, queued
+      so concurrent calls cannot bypass it). src/lib/geocode.ts
+- [x] geocoding error handling: not_found, rate_limited (>1rq/s), network_error,
+      invalid_response, returned as a typed result instead of thrown, so the
+      future publish endpoint can reject cleanly without a try/catch
+      verified against the real nominatim api: a real address geocodes
+      correctly
 - [ ] browser geolocation: "find jobs near me" button, explicit click only
+- [ ] handle all three geolocation outcomes: denied, unavailable, timeout
+      this is the browser's Geolocation API failing, a different thing from
+      geocoding failing above. fallback in every case is just the unfiltered map
 - [ ] privacy notice text next to that button
       to be gdpr compliant
 - [ ] haversine distance function: point to point, plain math
