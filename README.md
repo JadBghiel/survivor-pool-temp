@@ -127,12 +127,24 @@ here, however much you break it, cannot affect the live site.
       future publish endpoint can reject cleanly without a try/catch
       verified against the real nominatim api: a real address geocodes
       correctly
-- [ ] browser geolocation: "find jobs near me" button, explicit click only
-- [ ] handle all three geolocation outcomes: denied, unavailable, timeout
-      this is the browser's Geolocation API failing, a different thing from
-      geocoding failing above. fallback in every case is just the unfiltered map
-- [ ] privacy notice text next to that button
-      to be gdpr compliant
+- [x] browser geolocation: "find jobs near me" button, explicit click only
+      src/lib/geolocation.ts (the browser's own Geolocation API, not to be
+      confused with geocode.ts above which calls nominatim) +
+      src/components/LocateMeButton.tsx (button + consent dialog)
+- [x] handle all three geolocation outcomes: denied, unavailable, timeout
+      plus a 4th: unsupported (no navigator.geolocation at all). this is the
+      browser's Geolocation API failing, a different thing from geocoding
+      failing above. fallback in every case is the same message: keep
+      browsing all offers, nothing breaks
+- [x] privacy notice text next to that button, shown before the browser's own
+      permission prompt ever fires - our dialog explains what/why/how long,
+      then only on "autoriser" does the native prompt appear. declining closes
+      the dialog and never calls the geolocation api at all
+- [x] not retained beyond the active usage period (3.3): the coordinates only
+      ever exist in this component's react state, never written to
+      localStorage, a cookie, or sent to a server (no endpoint uses them yet).
+      closing the dialog (including via escape) drops that state, so a page
+      refresh already clears it, there is nothing to separately expire
 - [ ] haversine distance function: point to point, plain math
 - [ ] nearby jobs query: given a point + a radius, return jobs sorted by distance
 - [ ] coords validation: same -90/90 and -180/180 bounds as the bbox schema (emma part i think)
