@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import JobsMap from "./JobsMap"
+import { LocateMeButton } from '@/components/LocateMeButton'
 
 // the db is read per request, never at build time. milestone 1 replaces this
 // whole page with the leaflet map and this list becomes the mobile bottom sheet.
@@ -35,6 +36,10 @@ export default async function Home() {
             Documentation de l&apos;API
           </a>
         </p>
+        {/* temporary spot, milestone 1 moves this button onto the map itself */}
+        <div className="mt-4">
+          <LocateMeButton />
+        </div>
       </header>
 
         <JobsMap jobs={jobs} />
@@ -44,7 +49,7 @@ export default async function Home() {
           Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
         </p>
       ) : (
-        // one column on mobile, two from sm up - 3.1 responsive
+        // one column on mobile, two from sm up responsive
         <ul className="grid gap-3 sm:grid-cols-2">
           {jobs.map((job) => (
             <li

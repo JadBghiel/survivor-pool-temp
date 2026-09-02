@@ -80,3 +80,71 @@ we answer 3 things:
   can open the url. `git push` is the entire
   deploy step: vercel notices the new code and rebuilds the site by itself
 
+---
+
+## TRY FEATURES LOCALLT BEFORE PUSHING
+## bc any push redploys the vercel, when testing a feature make sure to do it locally first before pushing
+
+you can use docker to have a throwaway database on your own
+machine, good enough to test stuff
+
+```bash
+npm install                 # download the packages, once
+npm run db:local             # starts a postgres 16 container on port 55432
+cp .env.example .env         # then set both DATABASE_URL and DIRECT_URL to
+                              # postgresql://postgres:local@localhost:55432/geoemploi
+npm run db:migrate           # creates the tables inside that container
+npm run db:seed              # fills them with 1 employer and 3 jobs
+npm run dev                  # starts the site
+```
+
+now open, in your browser:
+
+- http://localhost:3000 - the site itself, with the 3 seeded jobs
+- http://localhost:3000/api/jobs - the same jobs as raw json
+- http://localhost:3000/api/docs - the api documentation page
+
+edit a file and save it, the browser updates itself, no restart needed
+
+when you are done, `npm run db:local:stop` stops the container. the data
+stays saved inside it, so running `npm run db:local` again later picks up
+right where you left off, no need to migrate or seed twice.
+
+
+## TODO
+
+### Jad:
+
+- [x] geocoding function: address + city + postalCode in, { latitude, longitude } out
+      calls nominatim api /lib/geocode.ts
+- [x] geocoding error handling: not_found, rate_limited (>1rq/s), network_error,
+      invalid_response, returned as a typed result
+- [x] browser geolocation: "find jobs near me" button, explicit click only
+      src/lib/geolocation.ts + src/components/LocateMeButton.tsx (button + consent dialog)
+      do this cmd in the console or your browser to test it: 
+      `navigator.geolocation.getCurrentPosition(p => console.log(p.coords.latitude, p.coords.longitude))`
+- [x] handle all three geolocation outcomes: denied, unavailable, timeout
+      plus a 4th: unsupported (no navigator.geolocation at all). this is the
+      browser's Geolocation API failing
+- [x] privacy notice text next to that button
+- [x] not retained beyond the active usage period: the coordinates only
+      ever exist in this components react state
+- [x] haversine distance function: in src/lib/haversine.ts
+      also a boundingBoxKm() helper: a sql rectangle pre filter (uses the
+      existing archivedAt+lat+lng index) so a small radius on a large table
+      never needs a full scan, haversine refines the few rows the box let through more efficient
+- [x] nearby jobs query: GET /api/jobs/nearby?lat&lng&radiusKm, given a point +
+      a radius, returns jobs within it sorted nearest first src/lib/routes/jobs.ts
+      registered before /jobs/{id}
+  - [x] coords validation: the bbox schema is the maps viewport (emma), this one validates lat/lng/radiusKm on this endpoints own query params
+
+for later:
+- [ ] wiring the geocoding function into the actual publish ajob form/endpoint on the website, we will make it avaiable wehn singining in a as a employer
+
+### Nico:
+- [] user/seeker account creation (OAuth2)
+
+### Emma:
+- [] Map
+
+
