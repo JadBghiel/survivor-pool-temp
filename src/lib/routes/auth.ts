@@ -75,59 +75,59 @@ const retrieveRoute = createRoute({
     path: '/auth/me',
 })
 
-//export const authApp = new OpenAPIHono()
-//
-//// register
-//authApp.openapi(registerRoute, async (c) => {
-//    const { email, password, role, firstName, lastName, companyName } = c.req.valid('json')
-//    const existingUser = await prisma.user.findUnique({ where: { email } })
-//    if (existingUser) {
-//        return c.json({ error: 'User with this email already exists' }, 400)
-//    }
-//
-//    const passwordHash = await bcrypt.hash(password, 10)
-//    const newUser = await prisma.user.create({
-//        data: {
-//            email,
-//            passwordHash,
-//            role,
-//            ...(role === 'SEEKER' && {
-//                seekerProfile: {
-//                    create: {
-//                        firstName: firstName || '',
-//                        lastName: lastName || '',
-//                    },
-//                },
-//            }),
-//            ...(role === 'EMPLOYER' && {
-//                employerProfile: {
-//                    create: {
-//                        companyName: companyName || 'Unknown Company',
-//                    },
-//                },
-//            }),
-//        },
-//    })
-//
-//    const token = jwt.sign(
-//        { sub: newUser.id, email: newUser.email, role: newUser.role },
-//        JWT_SECRET,
-//        { expiresIn: '7d' }
-//    )
-//    return c.json(
-//        {
-//            token,
-//            user: {
-//                id: newUser.id,
-//                email: newUser.email,
-//                role: newUser.role,
-//            },
-//        },
-//        201
-//    )
-//})
-//
-//// login
+export const authApp = new OpenAPIHono()
+
+// register
+authApp.openapi(registerRoute, async (c) => {
+    const { email, password, role, firstName, lastName, companyName } = c.req.valid('json')
+    const existingUser = await prisma.user.findUnique({ where: { email } })
+    if (existingUser) {
+        return c.json({ error: 'User with this email already exists' }, 400)
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10)
+    const newUser = await prisma.user.create({
+        data: {
+            email,
+            passwordHash,
+            role,
+            ...(role === 'SEEKER' && {
+                seekerProfile: {
+                    create: {
+                        firstName: firstName || '',
+                        lastName: lastName || '',
+                    },
+                },
+            }),
+            ...(role === 'EMPLOYER' && {
+                employerProfile: {
+                    create: {
+                        companyName: companyName || 'Unknown Company',
+                    },
+                },
+            }),
+        },
+    })
+
+    const token = jwt.sign(
+        { sub: newUser.id, email: newUser.email, role: newUser.role },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+    )
+    return c.json(
+        {
+            token,
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+                role: newUser.role,
+            },
+        },
+        201
+    )
+})
+
+// login
 //authApp.openapi(loginRoute, async (c) => {
 //    const { email, password } = c.req.valid('json')
 //    const user = await prisma.user.findUnique({ where: { email } })
