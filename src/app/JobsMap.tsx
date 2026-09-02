@@ -15,7 +15,7 @@ function JobsMap() {
         container: mapContainer.current,
         style: MapStyle.STREETS,
         center: [-3.70, 40.42],
-        zoom: 12,
+        zoom: 15,
     })
     }, [])
 
