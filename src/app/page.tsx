@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/db'
-import JobsMap from "./JobsMap"
+import JobsMap from './JobsMapClient'
 import { LocateMeButton } from '@/components/LocateMeButton'
 
 // the db is read per request, never at build time. milestone 1 replaces this
-// whole page with the leaflet map and this list becomes the mobile bottom sheet.
+// whole page with the leaflet map and this list becomes the mobile bottom sheet
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
@@ -45,12 +45,12 @@ export default async function Home() {
         <JobsMap jobs={jobs} />
 
       {jobs.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
+        <p className="mt-4 rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
           Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
         </p>
       ) : (
         // one column on mobile, two from sm up responsive
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {jobs.map((job) => (
             <li
               key={job.id}
