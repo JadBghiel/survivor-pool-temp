@@ -13,12 +13,10 @@ function JobsMap({ jobs }: JobsMapProps) {
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-    config.apiKey = process.env.NEXT_PUBLIC_MAPTILER_KEY
-
-    // fall back to the previous hardcoded center when there is no listing to center on yet
-    const [centerLng, centerLat] = jobs.length > 0
-        ? [jobs[0].longitude, jobs[0].latitude]
-        : [-3.70, 40.42]
+    // fall back to 0 0,
+    const [centerLat, centerLng] = jobs.length > 0
+        ? [jobs[0].latitude, jobs[0].longitude]
+        : [0, 0]
 
     map.current = new Map({
         container: mapContainer.current!,
