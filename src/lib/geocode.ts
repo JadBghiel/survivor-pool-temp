@@ -1,14 +1,11 @@
 // server only
-// turns an address into coords using nominatim api, limited at 1rq/s,
-// requires also a user agent identifying the caller, both are handled here so every future
-// caller (the publish endpoint) gets them too
-// https://operations.osmfoundation.org/policies/nominatim/
-// https://nominatim.org/release-docs/develop/api/Overview/
+// turns an address into coords using api adresse, the only geocoder the ministry allows now
+// nominatim and every commercial geocoder are banned
+// https://adresse.data.gouv.fr/api-doc/adresse
 
-const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search'
-const USER_AGENT = 'GeoEmploi/0.1 (+https://survivor-pool-temp.vercel.app)'
-// nominatim allows 1/sec, pad a little so we never trip it under load
-const MIN_INTERVAL_MS = 1100
+const API_ADRESSE_URL = 'https://api-adresse.data.gouv.fr/search/'
+// no hard limit like nominatim's 1/sec, staying under the ~50/sec the docs mention
+const MIN_INTERVAL_MS = 100
 
 export type GeocodeInput = {
   address: string
@@ -20,9 +17,9 @@ export type GeocodeResult =
   | { ok: true; latitude: number; longitude: number }
   | {
       ok: false
-      // not_found: nominatim understood the request but knows no such place,
-      // network_error: nominatim unreachable or timed out
-      // invalid_response: nominatim replied but not with the shape we expect
+      // not_found, api adresse understood the request but knows no such place
+      // network_error, api adresse unreachable or timed out
+      // invalid_response, api adresse replied but not with the shape we expect
       reason: 'not_found' | 'rate_limited' | 'network_error' | 'invalid_response'
     }
 
@@ -49,21 +46,18 @@ export function geocodeAddress(input: GeocodeInput): Promise<GeocodeResult> {
 }
 
 async function doGeocode({ address, city, postalCode }: GeocodeInput): Promise<GeocodeResult> {
+  // api adresse takes one free text query, not separate street/city fields
+  // postcode narrows to the right commune when streets share a name nationwide
   const params = new URLSearchParams({
-    street: address,
-    city,
-    postalcode: postalCode,
-    // the brief and every seeded listing are french, narrowing the search
-    // avoids nominatim matching a same named street in the wrong country
-    country: 'France',
-    format: 'jsonv2',
+    q: `${address} ${city}`,
+    postcode: postalCode,
     limit: '1',
   })
 
   let response: Response
   try {
-    response = await fetch(`${NOMINATIM_URL}?${params.toString()}`, {
-      headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' },
+    response = await fetch(`${API_ADRESSE_URL}?${params.toString()}`, {
+      headers: { Accept: 'application/json' },
     })
   } catch {
     return { ok: false, reason: 'network_error' }
@@ -79,13 +73,19 @@ async function doGeocode({ address, city, postalCode }: GeocodeInput): Promise<G
     return { ok: false, reason: 'invalid_response' }
   }
 
-  if (!Array.isArray(body) || body.length === 0) {
+  const features = (body as { features?: unknown }).features
+  if (!Array.isArray(features) || features.length === 0) {
     return { ok: false, reason: 'not_found' }
   }
 
-  const first = body[0] as { lat?: unknown; lon?: unknown }
-  const latitude = Number(first.lat)
-  const longitude = Number(first.lon)
+  const geometry = (features[0] as { geometry?: { coordinates?: unknown } }).geometry
+  const coordinates = geometry?.coordinates
+  if (!Array.isArray(coordinates) || coordinates.length !== 2) {
+    return { ok: false, reason: 'invalid_response' }
+  }
+
+  // geojson order is longitude then latitude, reverse
+  const [longitude, latitude] = coordinates.map(Number)
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
     return { ok: false, reason: 'invalid_response' }
   }

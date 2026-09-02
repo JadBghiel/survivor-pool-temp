@@ -1,34 +1,42 @@
 "use client"
 
-import "@maptiler/sdk/dist/maptiler-sdk.css"
-import React, { useEffect, useRef } from 'react'
-import { config, Map, MapStyle, Marker } from "@maptiler/sdk";
+import "leaflet/dist/leaflet.css"
+import { useEffect, useRef } from 'react'
+import L from "leaflet"
+
+// ign geoplateforme tiles only, per new emails directive
+//  we kept leaflet tho
+const IGN_WMTS_URL =
+  'https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+  '&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM' +
+  '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png'
+const IGN_ATTRIBUTION = '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a>'
 
 type JobsMapProps = {
     jobs: { id: string; latitude: number; longitude: number }[]
 }
 
 function JobsMap({ jobs }: JobsMapProps) {
-    const map = useRef<Map | null>(null);
+    const map = useRef<L.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-    config.apiKey = process.env.NEXT_PUBLIC_MAPTILER_KEY
+    // fall back to 0 0,
+    const [centerLat, centerLng] = jobs.length > 0
+        ? [jobs[0].latitude, jobs[0].longitude]
+        : [0, 0]
 
-    // fall back to the previous hardcoded center when there is no listing to center on yet
-    const [centerLng, centerLat] = jobs.length > 0
-        ? [jobs[0].longitude, jobs[0].latitude]
-        : [-3.70, 40.42]
+    map.current = L.map(mapContainer.current!).setView([centerLat, centerLng], 15)
 
-    map.current = new Map({
-        container: mapContainer.current!,
-        style: MapStyle.STREETS,
-        center: [centerLng, centerLat],
-        zoom: 15,
-    })
+    L.tileLayer(IGN_WMTS_URL, {
+        attribution: IGN_ATTRIBUTION,
+        minZoom: 2,
+        maxZoom: 19,
+    }).addTo(map.current)
 
+    // circleMarker skips leaflets default pin ico
     const markers = jobs.map((job) =>
-        new Marker().setLngLat([job.longitude, job.latitude]).addTo(map.current!)
+        L.circleMarker([job.latitude, job.longitude], { radius: 8 }).addTo(map.current!)
     )
 
     return () => {
