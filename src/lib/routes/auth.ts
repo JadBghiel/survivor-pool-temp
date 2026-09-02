@@ -58,23 +58,23 @@ const loginRoute = createRoute({
 })
 
 // Retrieve current user route definition
-//const retrieveRoute = createRoute({
-//    method: 'get',
-//    tags: ['auth'],
-//    summary: 'Get current user info from Authorization',
-//    responses: {
-//        200: {
-//            content: { 'application/json': { schema: RetrieveSchema } },
-//            description: 'Current user data'
-//        },
-//        401: {
-//            content: { 'application/json': { schema: ErrorSchema } },
-//            description: 'Invalid Token',
-//        },
-//    },
-//    path: '/auth/me',
-//})
-//
+const retrieveRoute = createRoute({
+    method: 'get',
+    tags: ['auth'],
+    summary: 'Get current user info from Authorization',
+    responses: {
+        200: {
+            content: { 'application/json': { schema: RetrieveSchema } },
+            description: 'Current user data'
+        },
+        401: {
+            content: { 'application/json': { schema: ErrorSchema } },
+            description: 'Invalid Token',
+        },
+    },
+    path: '/auth/me',
+})
+
 //export const authApp = new OpenAPIHono()
 //
 //// register
