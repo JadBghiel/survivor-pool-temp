@@ -6,7 +6,7 @@ import { requestBrowserLocation, type GeolocationResult } from '@/lib/geolocatio
 // this notice is shown before we ever call the browser's own permission
 // genrric prompt ("this site wants your location")
 // and cannot be customized, for now
-// dialog is the actual "clear, accessible information notice".
+// dialog is the actual "clear, accessible information notice"
 const FALLBACK_NOTE = 'Vous pouvez continuer à parcourir toutes les offres'
 
 const OUTCOME_MESSAGES: Record<Exclude<GeolocationResult['status'], 'success'>, string> = {
@@ -31,7 +31,6 @@ export function LocateMeButton() {
 
   function decline() {
     // nothing was requested, nothing to undo. the browser's own permission
-    // prompt never goes 
     dialogRef.current?.close()
   }
 

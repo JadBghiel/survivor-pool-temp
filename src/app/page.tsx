@@ -44,7 +44,7 @@ export default async function Home() {
           Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
         </p>
       ) : (
-        // one column on mobile, two from sm up - 3.1 responsive
+        // one column on mobile, two from sm up responsive
         <ul className="grid gap-3 sm:grid-cols-2">
           {jobs.map((job) => (
             <li
