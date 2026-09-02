@@ -42,8 +42,6 @@ export function requestBrowserLocation(): Promise<GeolocationResult> {
       {
         enableHighAccuracy: false,
         timeout: 10_000,
-        // never accept a cached fix from a previous visit, for gdpr reasons every call asks the
-        // browser fresh, so nothing about an earlier session stays here
         maximumAge: 0,
       },
     )

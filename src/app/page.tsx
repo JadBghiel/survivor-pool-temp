@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import JobsMap from "./JobsMap"
 import { LocateMeButton } from '@/components/LocateMeButton'
 
 // the db is read per request, never at build time. milestone 1 replaces this
@@ -13,6 +14,8 @@ export default async function Home() {
       title: true,
       city: true,
       contractType: true,
+      latitude: true,
+      longitude: true, 
       employer: { select: { companyName: true } },
     },
     orderBy: { createdAt: 'desc' },
@@ -39,12 +42,14 @@ export default async function Home() {
         </div>
       </header>
 
+        <JobsMap jobs={jobs} />
+
       {jobs.length === 0 ? (
         <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
           Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
         </p>
       ) : (
-        // one column on mobile, two from sm up - 3.1 responsive
+        // one column on mobile, two from sm up responsive
         <ul className="grid gap-3 sm:grid-cols-2">
           {jobs.map((job) => (
             <li
