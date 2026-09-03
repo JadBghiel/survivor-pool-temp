@@ -7,13 +7,21 @@ import L from "leaflet"
 // ign geoplateforme tiles only, per new emails directive
 //  we kept leaflet tho
 const IGN_WMTS_URL =
-  'https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
-  '&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM' +
-  '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png'
+    'https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+    '&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM' +
+    '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png'
 const IGN_ATTRIBUTION = '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a>'
 
 type JobsMapProps = {
-    jobs: { id: string; latitude: number; longitude: number }[]
+    jobs: {
+        id: string
+        title: string
+        city: string
+        contractType: string
+        latitude: number
+        longitude: number
+        employer: { companyName: string }
+    }[]
 }
 
 function JobsMap({ jobs }: JobsMapProps) {
