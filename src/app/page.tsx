@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import JobsMap from './JobsMapClient'
 import { LocateMeButton } from '@/components/LocateMeButton'
+import { AuthHeader } from '@/components/AuthHeader'
 
 // the db is read per request, never at build time. milestone 1 replaces this
 // whole page with the leaflet map and this list becomes the mobile bottom sheet
@@ -23,6 +24,7 @@ export default async function Home() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+      <AuthHeader />
       <header className="mb-8">
         <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
           Ministère du job & bnoheur
