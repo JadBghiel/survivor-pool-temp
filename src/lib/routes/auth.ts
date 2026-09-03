@@ -5,9 +5,12 @@ import { prisma } from '@/lib/db'
 import { RegisterSchema, LoginSchema, ResponseSchema, RetrieveSchema } from '@/lib/authschemas'
 import { ErrorSchema } from '@/lib/schemas'
 
-const JWT_SECRET = process.env.JWT_SECRET
-if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET environment variable is required')
+function getJwtSecret(): string {
+    const secret = process.env.JWT_SECRET
+    if (!secret) {
+        throw new Error('JWT_SECRET environment variable is required')
+    }
+    return secret
 }
 
 //Register route definition
@@ -114,7 +117,7 @@ authApp.openapi(registerRoute, async (c) => {
 
     const token = jwt.sign(
         { sub: newUser.id, email: newUser.email, role: newUser.role },
-        JWT_SECRET,
+        getJwtSecret(),
         { expiresIn: '7d' }
     )
     return c.json(
@@ -145,7 +148,7 @@ authApp.openapi(loginRoute, async (c) => {
 
     const token = jwt.sign(
         { sub: user.id, email: user.email, role: user.role },
-        JWT_SECRET,
+        getJwtSecret(),
         { expiresIn: '7d' },
     )
     return c.json(
@@ -170,7 +173,7 @@ authApp.openapi(retrieveRoute, async (c) => {
 
     const token = authHeader.replace('Bearer ', '')
     try {
-        const payload = jwt.verify(token, JWT_SECRET) as {
+        const payload = jwt.verify(token, getJwtSecret()) as {
             sub: string,
             email: string,
             role: 'SEEKER' | 'EMPLOYER' | 'ADMIN'
