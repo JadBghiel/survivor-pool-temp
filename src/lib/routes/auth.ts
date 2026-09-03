@@ -75,8 +75,12 @@ const retrieveRoute = createRoute({
         },
         401: {
             content: { 'application/json': { schema: ErrorSchema } },
-            description: 'Invalid Token',
+            description: 'Invalid or missing Authorization Token',
         },
+        500: {
+            content: { 'application/json': { schema: ErrorSchema } },
+            description: 'Internal server error'
+        }
     },
     path: '/auth/me',
 })
@@ -172,12 +176,15 @@ authApp.openapi(retrieveRoute, async (c) => {
     }
 
     const token = authHeader.replace('Bearer ', '')
+    let payload: { sub: string; email: string; role: 'SEEKER' | 'EMPLOYER' | 'ADMIN' }
+
     try {
-        const payload = jwt.verify(token, getJwtSecret()) as {
-            sub: string,
-            email: string,
-            role: 'SEEKER' | 'EMPLOYER' | 'ADMIN'
-        }
+        payload = jwt.verify(token, getJwtSecret()) as typeof payload
+    } catch {
+        return c.json({ error: 'Invalid or expired token' }, 401)
+    }
+
+    try {
         const user = await prisma.user.findUnique({
             where: { id: payload.sub },
             include: {
@@ -185,9 +192,11 @@ authApp.openapi(retrieveRoute, async (c) => {
                 employerProfile: true,
             },
         })
+
         if (!user) {
             return c.json({ error: 'User not found' }, 401)
         }
+
         return c.json(
             {
                 id: user.id,
@@ -209,6 +218,6 @@ authApp.openapi(retrieveRoute, async (c) => {
             200
         )
     } catch {
-        return c.json({ error: 'Invalid or expired token' }, 401)
+        return c.json({ error: 'Internal server error' }, 500)
     }
 })

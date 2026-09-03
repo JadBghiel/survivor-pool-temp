@@ -24,6 +24,15 @@ export function AuthHeader() {
   const [companyName, setCompanyName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
+  const resetForm = () => {
+    setEmail('')
+    setPassword('')
+    setFirstName('')
+    setLastName('')
+    setCompanyName('')
+    setError(null)
+  }
+
   useEffect(() => {
     const savedToken = localStorage.getItem('token')
     if (savedToken) {
@@ -32,14 +41,21 @@ export function AuthHeader() {
       })
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
-          if (data) setUser(data)
-          else localStorage.removeItem('token')
+          if (data) {
+            setUser(data)
+          } else {
+            localStorage.removeItem('token')
+            setUser(null)
+          }
         })
-        .catch(() => localStorage.removeItem('token'))
+        .catch(() => {
+          localStorage.removeItem('token')
+          setUser(null)
+        })
     }
   }, [])
 
-const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
 
@@ -93,8 +109,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       localStorage.setItem('token', data.token)
       setUser(data.user)
       setIsOpen(false)
-      setEmail('')
-      setPassword('')
+      resetForm()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -127,7 +142,10 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         ) : (
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              resetForm()
+              setIsOpen(true)
+            }}
             className="rounded bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
           >
             Log in / Register
@@ -144,7 +162,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 {isLogin ? 'Log In' : 'Create Account'}
               </h2>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  resetForm()
+                  setIsOpen(false)
+                }}
                 className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
               >
                 ✕
@@ -257,8 +278,8 @@ const handleSubmit = async (e: React.FormEvent) => {
             <div className="mt-4 text-center">
               <button
                 onClick={() => {
+                  resetForm()
                   setIsLogin(!isLogin)
-                  setError(null)
                 }}
                 className="text-xs text-neutral-500 underline underline-offset-4 hover:text-neutral-800 dark:hover:text-neutral-200"
               >
