@@ -50,3 +50,13 @@ export const JobNearbyListSchema = z.array(JobNearbySchema).openapi('JobNearbyLi
 export const ErrorSchema = z
   .object({ error: z.string().openapi({ example: 'not found' }) })
   .openapi('Error')
+
+export const PublishJobSchema = z.object({
+  title: z.string().min(1).openapi({ example: 'Développeur backend Node.js' }),
+  description: z.string().min(1).openapi({ example: 'CDI, équipe produit, télétravail partiel.' }),
+  contractType: ContractTypeSchema,
+  address: z.string().min(1).openapi({ example: '12 rue de la Fosse' }),
+  city: z.string().min(1).openapi({ example: 'Nantes' }),
+  postalCode: z.string().min(1).openapi({ example: '44000' }),
+  radiusKm: z.coerce.number().positive().max(200).default(25).openapi({ example: 25 }),
+})
