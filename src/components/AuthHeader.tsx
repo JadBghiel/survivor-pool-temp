@@ -62,7 +62,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         // 1. Check if error payload is stringified JSON from Zod
         const rawErr = data.error || data
-        let parsedIssues: any[] | null = null
+        let parsedIssues: { message?: string; path?: string[] }[] | null = null
 
         if (typeof rawErr?.message === 'string') {
           try {
@@ -95,8 +95,8 @@ const handleSubmit = async (e: React.FormEvent) => {
       setIsOpen(false)
       setEmail('')
       setPassword('')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
     }
   }
 
