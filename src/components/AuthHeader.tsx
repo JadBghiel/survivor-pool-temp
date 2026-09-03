@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 type User = {
   id: string
   email: string
-  role: 'SEEKER' | 'EMPLOYER'
-  seekerProfile?: { firstName: string; lastName: string }
-  employerProfile?: { companyName: string }
+  role: 'SEEKER' | 'EMPLOYER' | 'ADMIN'
+  seekerProfile?: { firstName: string; lastName: string } | null
+  employerProfile?: { companyName: string } | null
 }
 
 export function AuthHeader() {
