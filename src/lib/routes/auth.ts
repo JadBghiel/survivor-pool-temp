@@ -5,7 +5,10 @@ import { prisma } from '@/lib/db'
 import { RegisterSchema, LoginSchema, ResponseSchema, RetrieveSchema } from '@/lib/authschemas'
 import { ErrorSchema } from '@/lib/schemas'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret-key-to-change'
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is required')
+}
 
 //Register route definition
 const registerRoute = createRoute({
@@ -26,7 +29,7 @@ const registerRoute = createRoute({
         },
         400: {
             content: { 'application/json': { schema: ErrorSchema } },
-            description: 'Validation error or not logged in',
+            description: 'Validation error or email already in use',
         }
     },
     path: '/auth/register',
@@ -36,7 +39,7 @@ const registerRoute = createRoute({
 const loginRoute = createRoute({
     method: 'post',
     tags: ['auth'],
-    summary: 'Log in with email and passwerd',
+    summary: 'Log in with email and password',
     request: {
         body: {
             content: {
