@@ -4,14 +4,7 @@ import jwt from 'jsonwebtoken'
 import { prisma } from '@/lib/db'
 import { RegisterSchema, LoginSchema, ResponseSchema, RetrieveSchema } from '@/lib/authschemas'
 import { ErrorSchema } from '@/lib/schemas'
-
-function getJwtSecret(): string {
-    const secret = process.env.JWT_SECRET
-    if (!secret) {
-        throw new Error('JWT_SECRET environment variable is required')
-    }
-    return secret
-}
+import { getJwtSecret } from '@/lib/auth'
 
 //Register route definition
 const registerRoute = createRoute({
