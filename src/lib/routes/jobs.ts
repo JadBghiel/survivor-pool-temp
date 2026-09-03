@@ -6,9 +6,12 @@ import {
   JobSummarySchema,
   JobNearbyListSchema,
   NearbyQuerySchema,
+  PublishJobSchema,
   ErrorSchema,
 } from '@/lib/schemas'
 import { haversineDistanceKm, boundingBoxKm } from '@/lib/haversine'
+import { geocodeAddress } from '@/lib/geocode'
+import { verifyAuthHeader } from '@/lib/auth'
 
 // route definition and handler sit next to each other. the definition is what
 // becomes the openapi doc, so documenting an endpoint is not a separate chore.
@@ -44,6 +47,23 @@ const nearbyJobs = createRoute({
       content: { 'application/json': { schema: JobNearbyListSchema } },
       description: 'Matching listings within radiusKm, nearest first',
     },
+  },
+})
+
+const publishJob = createRoute({
+  method: 'post',
+  path: '/jobs',
+  tags: ['jobs'],
+  summary: 'Publish a new job listing',
+  description:
+    'requires an EMPLOYER bearer token, the address is geocoded server side via ' +
+    'api adresse',
+  request: { body: { content: { 'application/json': { schema: PublishJobSchema } } } },
+  responses: {
+    201: { content: { 'application/json': { schema: JobSummarySchema } }, description: 'listing created' },
+    400: { content: { 'application/json': { schema: ErrorSchema } }, description: 'validation error or address could not be geocoded' },
+    401: { content: { 'application/json': { schema: ErrorSchema } }, description: 'missing or invalid token' },
+    403: { content: { 'application/json': { schema: ErrorSchema } }, description: 'only employers can publish listings' },
   },
 })
 
@@ -144,6 +164,37 @@ jobs.openapi(nearbyJobs, async (c) => {
     .sort((a, b) => a.distanceKm - b.distanceKm)
 
   return c.json(withDistance, 200)
+})
+
+jobs.openapi(publishJob, async (c) => {
+  const payload = verifyAuthHeader(c.req.header('Authorization'))
+  if (!payload) return c.json({ error: 'missing or invalid token' }, 401)
+  if (payload.role !== 'EMPLOYER') return c.json({ error: 'only employers can publish listings' }, 403)
+
+  const { title, description, contractType, address, city, postalCode, radiusKm } = c.req.valid('json')
+
+  const geocoded = await geocodeAddress({ address, city, postalCode })
+  if (!geocoded.ok) {
+    return c.json({ error: `Coundt not locate this address (${geocoded.reason})` }, 400)
+  }
+
+  const row = await prisma.job.create({
+    data: {
+      employerId: payload.sub,
+      title,
+      description,
+      contractType,
+      address,
+      city,
+      postalCode,
+      radiusKm,
+      latitude: geocoded.latitude,
+      longitude: geocoded.longitude,
+    },
+    select,
+  })
+
+  return c.json(toSummary(row), 201)
 })
 
 jobs.openapi(getJob, async (c) => {
