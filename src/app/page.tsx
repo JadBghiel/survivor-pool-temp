@@ -29,7 +29,7 @@ export default async function Home() {
         <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
           Ministère du job & bnoheur
         </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">GéoEmploi</h1>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">ChomageGo</h1>
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
           Consultation libre des offres, sans compte.{' '}
           {/* served by hono, not a next page, so next/link would break it */}

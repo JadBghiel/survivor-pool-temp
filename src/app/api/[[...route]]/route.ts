@@ -17,7 +17,7 @@ app.route('/', authApp)
 app.doc('/openapi.json', {
   openapi: '3.0.0',
   info: {
-    title: 'GéoEmploi API',
+    title: 'ChomageGo API',
     version: '0.1.0',
     description:
       'Ministère du job & bonheur - JEB/DNI/2026-001. ' +
@@ -25,7 +25,7 @@ app.doc('/openapi.json', {
   },
 })
 
-app.get('/docs', Scalar({ url: '/api/openapi.json', pageTitle: 'GéoEmploi API' }))
+app.get('/docs', Scalar({ url: '/api/openapi.json', pageTitle: 'ChomageGo API' }))
 
 export const GET = handle(app)
 export const POST = handle(app)

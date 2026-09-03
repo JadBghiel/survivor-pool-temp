@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GéoEmploi',
+  title: 'ChomageGo',
   description: 'Offres d\'emploi géolocalisées - Ministère du job & bonheur',
 }
 
