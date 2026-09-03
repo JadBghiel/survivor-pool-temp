@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches: [main]      #se ejehuta cuando alguiien hace push en la rama mian
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:       #levanta un contenedor auxilar uq emi codigo neceeista
+      postgres:
+        image: postgres:16      #es la imagn oficial de postgresql
+        env:
+          POSTGRES_PASSWORD: local
+          POSTGRES_DB: geoemploi
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
+    env:
+      DATABASE_URL: postgresql://postgres:local@localhost:5432/geoemploi
+      DIRECT_URL: postgresql://postgres:local@localhost:5432/geoemploi
+
+    steps:
+      - uses: actions/checkout@v4     #baja el codigo al rdenandor del workflow
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci     #instala node y dependencias
+
+      - run: npm run db:deploy     #crea las tablas en la sbases d edatos
+
+      - run: npm run db:seed      #llen ala s tabals
+
+      - run: npm run build
+
+      - uses: actions/upload-artifact@v4    #guardalro como artectao descargable
+        with:
+          name: build-output
+          path: .next
