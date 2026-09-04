@@ -146,15 +146,15 @@ export default function AdminPage() {
       <main className="mx-auto max-w-7xl p-6">
         {/* Navigation Tabs */}
         <div className="mb-6 flex space-x-2 border-b border-neutral-200 pb-2 dark:border-neutral-800">
-          {[
+          {([
             { key: 'overview', label: 'System Overview' },
             { key: 'users', label: 'User Management' },
             { key: 'jobs', label: 'Job Moderation' },
             { key: 'logs', label: 'Audit Logs' },
-          ].map((tab) => (
+          ] as const).map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key)}
               className={`rounded-md px-4 py-2 text-xs font-semibold transition-colors ${
                 activeTab === tab.key
                   ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
