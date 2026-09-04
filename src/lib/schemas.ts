@@ -24,6 +24,16 @@ export const JobSummarySchema = z
 
 export const JobListSchema = z.array(JobSummarySchema).openapi('JobList')
 
+// the full record, fetched only when someone opens one listing. everything the
+// summary leaves out for payload reasons lives here
+export const JobDetailSchema = JobSummarySchema.extend({
+  description: z.string().openapi({ example: 'Vos missions, le profil recherché...' }),
+  address: z.string().openapi({ example: '12 quai de Bacalan' }),
+  postalCode: z.string().openapi({ example: '33300' }),
+  radiusKm: z.number().openapi({ example: 25 }),
+  createdAt: z.string().openapi({ example: '2026-09-03T08:00:00.000Z' }),
+}).openapi('JobDetail')
+
 // the map will send its viewport here at milestone 1. accepted already so the
 // contract does not change when leaflet lands
 export const BboxQuerySchema = z.object({

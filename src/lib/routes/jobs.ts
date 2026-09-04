@@ -7,6 +7,7 @@ import {
   JobNearbyListSchema,
   NearbyQuerySchema,
   PublishJobSchema,
+  JobDetailSchema,
   ErrorSchema,
 } from '@/lib/schemas'
 import { haversineDistanceKm, boundingBoxKm } from '@/lib/haversine'
@@ -75,7 +76,7 @@ const getJob = createRoute({
   description: 'Public endpoint, no authentication.',
   request: { params: JobSummarySchema.pick({ id: true }) },
   responses: {
-    200: { content: { 'application/json': { schema: JobSummarySchema } }, description: 'The listing' },
+    200: { content: { 'application/json': { schema: JobDetailSchema } }, description: 'The listing' },
     404: { content: { 'application/json': { schema: ErrorSchema } }, description: 'No such listing' },
   },
 })
@@ -199,7 +200,21 @@ jobs.openapi(publishJob, async (c) => {
 
 jobs.openapi(getJob, async (c) => {
   const { id } = c.req.valid('param')
-  const row = await prisma.job.findFirst({ where: { id, archivedAt: null }, select })
+  const row = await prisma.job.findFirst({
+    where: { id, archivedAt: null },
+    select: { ...select, description: true, address: true, postalCode: true, radiusKm: true, createdAt: true },
+  })
   if (!row) return c.json({ error: 'not found' }, 404)
-  return c.json(toSummary(row), 200)
+
+  return c.json(
+    {
+      ...toSummary(row),
+      description: row.description,
+      address: row.address,
+      postalCode: row.postalCode,
+      radiusKm: row.radiusKm,
+      createdAt: row.createdAt.toISOString(),
+    },
+    200,
+  )
 })

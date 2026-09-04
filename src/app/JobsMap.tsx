@@ -12,11 +12,25 @@ const IGN_WMTS_URL =
   '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png'
 const IGN_ATTRIBUTION = '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a>'
 
-type JobsMapProps = {
-    jobs: { id: string; latitude: number; longitude: number }[]
+// institutional blue from the ministry charte graphique
+const MARKER_BLUE = '#1B3A6B'
+
+type MapJob = {
+  id: string
+  title: string
+  company: string
+  city: string
+  contractType: string
+  latitude: number
+  longitude: number
 }
 
-function JobsMap({ jobs }: JobsMapProps) {
+type JobsMapProps = {
+  jobs: MapJob[]
+  onSelectJob?: (id: string) => void
+}
+
+function JobsMap({ jobs, onSelectJob }: JobsMapProps) {
     const map = useRef<L.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
@@ -35,15 +49,31 @@ function JobsMap({ jobs }: JobsMapProps) {
     }).addTo(map.current)
 
     // circleMarker skips leaflets default pin ico
-    const markers = jobs.map((job) =>
-        L.circleMarker([job.latitude, job.longitude], { radius: 8 }).addTo(map.current!)
-    )
+    const markers = jobs.map((job) => {
+        const marker = L.circleMarker([job.latitude, job.longitude], {
+            radius: 9,
+            color: '#ffffff',
+            weight: 2,
+            fillColor: MARKER_BLUE,
+            fillOpacity: 1,
+        }).addTo(map.current!)
+
+        marker.bindTooltip(`${job.title} — ${job.company}`, { direction: 'top', offset: [0, -8] })
+        marker.on('click', () => onSelectJob?.(job.id))
+        return marker
+    })
+
+    // frame every listing at once instead of guessing a zoom level, so a cluster
+    // of offers in one city fills the screen rather than sitting off the edge
+    if (markers.length > 0) {
+        map.current.fitBounds(L.featureGroup(markers).getBounds().pad(0.2))
+    }
 
     return () => {
         markers.forEach((marker) => marker.remove())
         map.current?.remove()
     }
-    }, [jobs])
+    }, [jobs, onSelectJob])
 
     return <div ref = {mapContainer} style={{width: "100%", height: "100vh"}}/>
 }
