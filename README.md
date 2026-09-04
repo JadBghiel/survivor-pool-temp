@@ -135,6 +135,27 @@ verified working, but only ever lived on `test/kit_presse` and was never merged 
 `main`. bring it over before doing anything else - right now the deliverable already
 sent describes a database that doesn't exist here.
 
+### NICO TO FIX, admin dashboard buttons do nothing (237b2f8)
+the stats, user table and job table all come from real prisma queries via
+`GET /api/admin/overview` but the actions dont do nun
+
+- suspend/unsuspend (user table) and approve/flag-hide (job table) only call local
+  setState, no fetch, no patch, nothing hits the backend, click one, refresh the
+  page, it reverts, admin.ts exposes exactly one route, get /admin/overview, no
+  endpoint exists to persist any of these decisions
+- no columns exist to persist them into, schema.prisma wasn't touched by the merge,
+  user has no status/suspended field, job has no moderation status field, needs a
+  migration first, not just a route
+- pending review is permanently 0, the backend hardcodes pendingJobs: 0 and maps
+  every job to status published, no pending state exists in the db
+- audit logs tab is permanently empty, backend returns a hardcoded logs: [], no
+  log model exists
+
+pls doa migration adding the status columns (+ an audit log model
+if we keep that tab), then PATCH routes in `admin.ts` guarded by the same ADMIN check
+the overview route already does, then wire the buttons to them. until that lands,
+the moderation half of the admin panel is a mockup - do not demo those buttons.
+
 ### done (cross-cutting)
 
 - [x] geocoding: address in, { latitude, longitude } out, via API Adresse
@@ -309,4 +330,3 @@ read docs/EMAILS.md for the full email text and what's already been sent back.
 	- mail: testAdmin@gmail.com
 	- password: admin123
 	- install: npm install -D tsx (if not installed)
-      
