@@ -42,9 +42,9 @@ we answer 3 things:
   text or `p-4` for some padding. it is a big box of lego bricks for styling,
   faster than naming and writing a new css rule for everything
 
-- **leaflet + openstreetmap** NOT DONE YET the actual
-  map widget, plus the map tiles it draws (roads, cities, coastlines). both
-  are free and open source
+- **leaflet + IGN Géoplateforme**: the actual map widget, plus the map tiles it
+  draws (roads, cities, coastlines). tiles migrated off openstreetmap to IGN's
+  keyless flux per the ministry's convention (see CLIENT CONSTRAINTS above)
 
 - **hono**: a tiny doorman living at `/api`. every request for data (get me
   the jobs, get me job #4) walks through this door first. it checks the
@@ -71,9 +71,9 @@ we answer 3 things:
   where every job listing and user account is permanently stored. postgres is
   the software who lives in neon (direclty integrated in vercel)
 
-- **jwt** NOT DONE YET: how the app will recognize we're
-  logged in. after we log in once, the server hands we a signed note ("this
-  is user #12, seeker role"). we show that note on every future request
+- **jwt**: how the app recognizes we're logged in. after we log in once, the
+  server hands us a signed note ("this is user #12, seeker role"). we show
+  that note on every future request
   instead of typing wer password again each time
 
 - **vercel**: the host, the computer that runs the app so anyone on the internet
@@ -131,12 +131,18 @@ THE MORE URGENT STUFF IS AT THE TOP in the list below so please dont do a task i
       (src/app/JobsMap.tsx) migrated off maptiler
 - [x] register / login / me, bcrypt + jwt, seeker and employer roles
       (src/lib/routes/auth.ts, src/components/AuthHeader.tsx)
+- [x] publish a listing: POST /api/jobs, employer-only, geocodes server side
 - [x] github actions workflow: builds end to end, seeds, publishes the .next build as
       an artifact on every push to main (.github/workflows/build.yml) reconfirm it's
       green on the latest commit each time, it regressed once already
-- [x] prototype documented (2 pages), user guide with real screenshots, plan B all
-      three exist at repo root, sent as email attachments
-
+- [x] prototype documented (2 pages), user guide with real screenshots, plan B - all
+      live in docs/ (PROTOTYPE_DOCUMENTE.md, USER_GUIDE.md + user_guided_images/,
+      PLAN_B.md), sent as email attachments
+- [x] kit presse (email 5, Benjamin Sellami): 5 press-ready screenshots in
+      docs/PRESS_KIT_SCREENSHOTS/, 3 taglines in docs/PRESS_KIT.md - see the seed
+      data warning above though, the doc oversells what main's db currently holds SCREENS ONLY
+- [x] db schema diagram, **Thomas Vignal, friday 17:00** - docs/schema.dbml (source)
+      + docs/schema.svg (rendered), matches the running schema.prisma exactly
 ---
 
 ## 🔴 URGENT — due friday, start here
@@ -158,29 +164,34 @@ THE MORE URGENT STUFF IS AT THE TOP in the list below so please dont do a task i
       on the existing map - is a friday item, not a week 2 one
 - [ ] prepare the oral presentation: functional demo + the technical approach
 
-### cabinet deliverables with a stamped friday deadline
+### cabinet deliverable with a stamped friday deadline, still open
 
-- [ ] db schema diagram (image or dbml), **friday 17:00**, matching the schema
-      currently running - Thomas Vignal
 - [ ] ministerial charte graphique conformity checklist + the demo video (<2min,
-      1080p, burned-in subtitles), **friday 12:00** - Benjamin Sellami
+      1080p, burned-in subtitles), **Benjamin Sellami, friday 12:00** - checked: no
+      trace of the charter colors (`#1B3A6B`) or fonts (Marianne/Spectral) anywhere
+      in src/, and no video file in the repo. not started
 
 ### foundational work friday's review will expect, even without a stamped hour
 
 - [ ] add geocoding traceability columns (source, confidence score, date) via a
-      schema migration - feeds directly into the db schema deliverable above
+      schema migration this changes the db schema, so the diagram above will need
+      a quick re-render after
 - [ ] write the re-geocode script for existing listings: rerunnable, idempotent,
       rate-limit aware, routing unresolved addresses to a "localisation à vérifier"
       state, plus the migration report (rows migrated/failed, average drift, top 5
-      displacements) and the 2-page migration note
+      displacements) and the 2-page migration note - checked docs/, no migration
+      note exists yet
 - [ ] add server-side Lambert-93 (EPSG:2154) coordinate conversion for the admin ui
       and exports
 - [ ] add a server-side tile cache in front of IGN, and expose hit/miss counts
 - [ ] build a `/health` endpoint reporting app status, version, and db connection,
-      responding within 200ms even when the tile provider is slow
+      responding within 200ms even when the tile provider is slow - checked, no
+      `/health` route exists anywhere yet
 - [ ] capture real request/response examples from the running app for the openapi
-      spec, plus the .http file or curl script that produced them
-- [ ] write the 1-page deployment note: prod hosting, resources, data leaving the infra
+      spec, plus the .http file or curl script that produced them - checked, no
+      `.http` file in the repo
+- [ ] write the 1-page deployment note: prod hosting, resources, data leaving the
+      infra - checked docs/, doesn't exist yet
 - [ ] apply the ministerial charte graphique everywhere: color, fonts, logo, plus the
       screens people forget - login, 404/500, empty states, loading, transactional
       emails, favicon, tab title, pdf exports
