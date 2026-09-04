@@ -113,10 +113,29 @@ right where you left off, no need to migrate or seed twice.
 
 ## TODO
 
-btw i put florine stuff to week two bc i consider the pdf to be the source of truth
-THE MORE URGENT STUFF IS AT THE TOP in the list below so please dont do a task if it the very next one 
+status re-checked 2026-09-05. two separate task lists below, kept deliberately apart
+because they come from two different sources of truth that don't always agree:
 
-### done
+- **spec tasks** — from `SECOND_VERSION_instructions.md` (v1.1, the minister's own
+  rewrite) only. this is the product spec.
+- **email tasks** — from `docs/EMAILS.md` only. these are the cabinet's operational
+  asks, each with its own sender and deadline, layered on top of the spec.
+
+cross-cutting items (done list, the seed data warning) apply to both and sit above
+the split. THE MORE URGENT STUFF IS AT THE TOP within each list.
+
+### ⚠ seed data contradicts what's already been sent out - fix this first
+
+`docs/PRESS_KIT.md` (already answered to Benjamin, email 5) describes 6 employers,
+12 bordeaux jobs, and real demo logins (`demo1234`). **`prisma/seed.ts` on `main`
+does not produce that** - it's still the original 1-employer/3-job version with a
+placeholder password hash nobody can log in with. that richer seed (6 employers, 30
+jobs across bordeaux/paris/lyon/marseille, a loginable seeker) exists and was
+verified working, but only ever lived on `test/kit_presse` and was never merged to
+`main`. bring it over before doing anything else - right now the deliverable already
+sent describes a database that doesn't exist here.
+
+### done (cross-cutting)
 
 - [x] geocoding: address in, { latitude, longitude } out, via API Adresse
       (src/lib/geocode.ts) - migrated per Thomas Vignal's email
@@ -128,133 +147,156 @@ THE MORE URGENT STUFF IS AT THE TOP in the list below so please dont do a task i
 - [x] haversine distance + boundingBoxKm sql prefilter (src/lib/haversine.ts)
 - [x] nearby jobs query: GET /api/jobs/nearby?lat&lng&radiusKm, sorted nearest first
 - [x] map tiles: IGN Géoplateforme WMTS, leaflet kept as the rendering lib, keyless flux
-      (src/app/JobsMap.tsx) migrated off maptiler
+      (src/app/JobsMap.tsx) migrated off maptiler - confirmed live on main
 - [x] register / login / me, bcrypt + jwt, seeker and employer roles
       (src/lib/routes/auth.ts, src/components/AuthHeader.tsx)
-- [x] publish a listing: POST /api/jobs, employer-only, geocodes server side
+- [x] publish a listing: POST /api/jobs, employer-only, geocodes server side, rejects
+      if the address doesn't resolve (src/lib/routes/jobs.ts)
 - [x] github actions workflow: builds end to end, seeds, publishes the .next build as
-      an artifact on every push to main (.github/workflows/build.yml) reconfirm it's
+      an artifact on every push to main (.github/workflows/build.yml) - reconfirm it's
       green on the latest commit each time, it regressed once already
 - [x] prototype documented (2 pages), user guide with real screenshots, plan B - all
       live in docs/ (PROTOTYPE_DOCUMENTE.md, USER_GUIDE.md + user_guided_images/,
-      PLAN_B.md), sent as email attachments
-- [x] kit presse (email 5, Benjamin Sellami): 5 press-ready screenshots in
-      docs/PRESS_KIT_SCREENSHOTS/, 3 taglines in docs/PRESS_KIT.md - see the seed
-      data warning above though, the doc oversells what main's db currently holds SCREENS ONLY
-- [x] db schema diagram, **Thomas Vignal, friday 17:00** - docs/schema.dbml (source)
-      + docs/schema.svg (rendered), matches the running schema.prisma exactly
+      PLAN_B.md), sent to JEB (email 4)
+- [x] kit presse (email 5): 5 press-ready screenshots in docs/PRESS_KIT_SCREENSHOTS/,
+      3 taglines in docs/PRESS_KIT.md, sent to Benjamin - see the seed data warning
+      above though, the doc oversells what main's db currently holds
+- [x] db schema diagram: docs/schema.dbml (source) + docs/schema.svg (rendered),
+      matches the running schema.prisma exactly, sent to Thomas (email 2 reply)
+- [x] `.env.example` complete - was missing `DIRECT_URL`, added
+
 ---
 
-## 🔴 URGENT — due friday, start here
+## 📘 spec tasks — from SECOND_VERSION_instructions.md only
 
-### core product (original brief's week 1 deliverable)
+### week 1 (unstruck in v1.1, none of these four are optional)
 
-- [x] **build the publish a listing form.** wire the existing geocoder into an
-      employer-facing form so listings can be created from the product itself, rather
-      than only from the seed script. the single biggest priority against the week 1
-      deliverable ("publication of a geolocated listing")
 - [ ] confirm the map interface browses listings with no account required (already
       true today, just verify it stays true as the rest of this list lands)
-- [ ] confirm job-seeker and employer account creation both work end to end (done via
-      auth.ts/AuthHeader.tsx - reverify after any further changes)
-- [ ] **build AR-on-map (simulated is fine).** an unstruck week 1 checkmark in v1.1:
-      "map with AR listings (or simulated on a map if real AR is too complicated for
-      week 1, but it must be on the roadmap)". badges and the "JEB Work Permit" stay
-      week 2, but some version of this - even a simple "catch the listing" animation
-      on the existing map - is a friday item, not a week 2 one
-- [ ] prepare the oral presentation: functional demo + the technical approach
+- [ ] **build AR-on-map (simulated is fine).** "map with AR listings (or simulated on
+      a map if real AR is too complicated for week 1, but it must be on the roadmap)".
+      badges and the Work Permit stay week 2 - see the AR proposal already sent to
+      JEB in docs/EMAILS.md (email 4, réponse 2), pick one of the two options and
+      build it
+- [x] job-seeker and employer account creation
+- [x] publication of a geolocated listing
 
-### cabinet deliverable with a stamped friday deadline, still open
+### week 2 (unstruck in v1.1)
 
-- [ ] ministerial charte graphique conformity checklist + the demo video (<2min,
-      1080p, burned-in subtitles), **Benjamin Sellami, friday 12:00** - checked: no
-      trace of the charter colors (`#1B3A6B`) or fonts (Marianne/Spectral) anywhere
-      in src/, and no video file in the repo. not started
+- [ ] all features, including the badge system and the "JEB Work Permit" after 10
+      catches, on top of whichever AR-on-map interaction lands above
+- [ ] employer dashboard: stats + subscription management - exists on
+      `test/kit_presse` (source of the "tableau de bord employeur" press screenshot,
+      currently mock data), needs merging to main and wiring to real numbers
+- [ ] complete admin: moderate listings, activate/suspend accounts, national metrics,
+      real ADMIN-role account and guarded routes (v1.1: "admin is me or my assistant,
+      give me the highest permissions")
+- [ ] technical doc + retrospective
 
-### foundational work friday's review will expect, even without a stamped hour
-
-- [ ] add geocoding traceability columns (source, confidence score, date) via a
-      schema migration this changes the db schema, so the diagram above will need
-      a quick re-render after
-- [ ] write the re-geocode script for existing listings: rerunnable, idempotent,
-      rate-limit aware, routing unresolved addresses to a "localisation à vérifier"
-      state, plus the migration report (rows migrated/failed, average drift, top 5
-      displacements) and the 2-page migration note - checked docs/, no migration
-      note exists yet
-- [ ] add server-side Lambert-93 (EPSG:2154) coordinate conversion for the admin ui
-      and exports
-- [ ] add a server-side tile cache in front of IGN, and expose hit/miss counts
-- [ ] build a `/health` endpoint reporting app status, version, and db connection,
-      responding within 200ms even when the tile provider is slow - checked, no
-      `/health` route exists anywhere yet
-- [ ] capture real request/response examples from the running app for the openapi
-      spec, plus the .http file or curl script that produced them - checked, no
-      `.http` file in the repo
-- [ ] write the 1-page deployment note: prod hosting, resources, data leaving the
-      infra - checked docs/, doesn't exist yet
-- [ ] apply the ministerial charte graphique everywhere: color, fonts, logo, plus the
-      screens people forget - login, 404/500, empty states, loading, transactional
-      emails, favicon, tab title, pdf exports
-
-### seed data / demo readiness (blocks a credible friday demo)
-
-- [ ] seed a real, loginable account per role (seeker, employer, admin) with an actual
-      bcrypt hash - the current employer account uses a placeholder hash, so generate
-      real credentials before any live demo
-- [ ] expand the seed data to match Jean-Eudes Berlier's and both spec versions' demo
-      bar: several hundred credible jobs across many communes, with varied
-      descriptions
-
-### housekeeping (cheap, do alongside the above)
-
-- [ ] point `user_guide.md`'s screenshot paths at `user_guided_images/`, where the
-      files actually live
-- [ ] update the stack section further down to reflect that leaflet and jwt have shipped
-
----
-
-## 🟢 week 2 — next week's technical review + keynote
-
-### full feature set (both spec versions' week 2 deliverable)
-
-- [ ] build the apply flow: an apply button on a listing plus application tracking,
-      on top of the account system already in place
-- [ ] build the employer dashboard: listings published, views, applications received,
-      and subscription status (see €400/month below)
-- [ ] build the admin panel: moderate listings, activate/suspend accounts, national
-      metrics. give it a real ADMIN-role account and guarded routes (v1.1: "admin is
-      me or my assistant, give me the highest permissions")
-- [ ] build a reporting system so users can flag a fraudulent or non-compliant listing
-- [ ] wire a scheduled job that archives listings older than 30 days, using the
-      archivedAt column that already exists
-- [ ] write the technical documentation (installation, api) and the project
-      retrospective
-
-### deprioritized per the team decision above (Florine Pontaillac's email)
-
-- [ ] art. 30 RGPD processing sheet, the consent accepted/refused behavior table with
-      screenshots, the RGAA accessibility audit on 3 screens + keyboard-only
-      walkthrough, and the CGU draft marked existant vs intention - her email
-      requested these for friday 12:00, moved here deliberately, see the note above
-
-### v1.1-specific asks (minister's rewrite, weigh deliberately with the team)
+### v1.1-specific technical asks (JEB's marginalia in sections 2-3, weigh deliberately)
 
 - [ ] implement the €400/month employer subscription with radius-based pricing tiers:
       real payment, and enforcement of the tier against the radius an employer sets
-- [ ] build the real-time map update path. start with the config-toggleable polling
-      fallback Thomas Vignal's email requires (the ministry network blocks outbound
-      websockets), then layer websockets on top if time allows
+- [ ] build the real-time map update path (JEB: "websockets or whatever you want") -
+      note this collides with Thomas's email 2 ask for a polling fallback, see below
 - [ ] tune the map's display/zoom for street-level precision, v1.1's upgrade from the
       original district/municipality spec - the stored lat/lng is already exact, so
-      this is a display decision, cheap enough to pull forward to friday if time allows
-- [ ] build the badge system and the "JEB Work Permit" after 10 catches, on top of the
-      AR-on-map interaction that's a friday item above
+      this is a display decision, not new plumbing
 - [ ] decide whether the minister's own admin account should be a literal seed
       account or just a role assignment
+- [ ] apply flow (apply button + application tracking) - not in v1.1's explicit
+      deliverable checkmarks (implied under "all features"), exists on
+      `test/kit_presse` already (source of the "parcours de candidature" press
+      screenshot), needs merging to main
 
-### load test (explicitly next week, not friday)
+---
 
-- [ ] run the load test: k6/locust/jmeter, 50 concurrent users for 3 minutes, against a
-      db seeded with 500+ jobs across 50+ communes, due **before next week's technical
-      review** per Thomas Vignal's email - pairs with the seed data expansion above,
-      so the friday seed work doubles as prep for this
+## 📧 email tasks — from docs/EMAILS.md only
+
+read docs/EMAILS.md for the full email text and what's already been sent back.
+
+### Email 1a — Thomas Vignal, cartography (no stamped deadline, but "the day it lands")
+
+- [ ] add geocoding traceability columns (source, confidence score, date) via a
+      schema migration - changes the db schema, re-render docs/schema.svg after
+- [ ] write the re-geocode script for existing listings: rerunnable, idempotent,
+      rate-limit aware, routing unresolved addresses to a "localisation à vérifier"
+      state
+- [ ] the migration report (rows migrated/failed, average drift, top 5 displacements)
+      and the 2-page migration note - nothing written yet
+- [ ] add server-side Lambert-93 (EPSG:2154) coordinate conversion for the admin ui
+      and exports
+
+### Email 1b — Benjamin Sellami, charte graphique / name / video — friday 12:00
+
+- [ ] apply the ministerial charte graphique everywhere: `#1B3A6B` primary (never as
+      a button background), Marianne for titles / Spectral for body, logo top-left -
+      checked, none of this exists in src/ yet
+- [ ] produce the conformity checklist: every screen reviewed, "conforme" or "à
+      faire, prévu [date]"
+- [ ] trim or re-cut the demo video - `docs/raw-survivor-pool.webm` is 2:03, Benjamin's
+      limit here is 2:00 (JEB's email 4 limit is 3:00, that one's fine as-is, this is
+      a stricter, separate requirement)
+- [x] name: staying with "ChomageGo" instead of Benjamin's "GéoEmploi" ask - team
+      call, not a blocker, no action needed
+
+### Email 2 — Thomas Vignal, architecture & deployment — schema sent, rest still open
+
+- [x] db schema (image + dbml), sent - see done list above
+- [x] `.env.example` complete, sent
+- [x] openapi spec live at `/api/docs`, generated from the same zod schemas the
+      handlers validate with - mentioned in the reply, not a new attachment
+- [ ] capture real request/response examples from the running app, plus the `.http`
+      file or curl script that produced them - the spec exists, the proof-of-real
+      examples doesn't
+- [ ] build a `/health` endpoint: app status, version, db connection, <200ms even
+      when the tile provider is slow
+- [ ] write the 1-page deployment note: prod hosting, resources, data leaving the infra
+- [ ] add a server-side tile cache in front of IGN, expose hit/miss counts, measure
+      them on a second load of the same view
+- [ ] if the real-time map (v1.1 ask above) ships as websockets: document the
+      config-toggleable polling fallback this email requires (ministry network
+      blocks outbound websockets), list what differs between the two modes
+- [ ] load test before next week's technical review: k6/locust/jmeter, 50 concurrent
+      users x 3min on map + job list, db seeded with ≥500 jobs across ≥50 communes -
+      not friday, but pairs with the seed data fix at the top of this file
+
+### Email 3 — Florine Pontaillac, RGPD/accessibility/CGU — deprioritized, team decision
+
+- [ ] ⚠ team decision (logged in prior README revision): v1.1 itself tells the team
+      to deprioritize Florine's "additional requirements" in favor of JEB's document.
+      nothing here is built. still open: art. 30 processing sheet, consent
+      accepted/refused behavior table + screenshots, RGAA audit on 3 screens +
+      keyboard-only walkthrough, CGU draft marked existant vs intention
+- [ ] consider sending Florine a short note explaining the deprioritization decision
+      rather than leaving her unanswered - not drafted yet, see docs/EMAILS.md
+
+### Email 4 — Jean-Eudes Berlier, TV emergency — answered twice, done
+
+- [x] prototype + guide + video + plan B + demo accounts, sent - see done list above
+- [x] AR proposal (simulated markers vs radar effect) sent as a follow-up, awaiting
+      his pick - once chosen, build it under the week 1 spec task above
+
+### Email 5 — Benjamin Sellami, kit presse — done
+
+- [x] 5 screenshots + 3 taglines, sent - see done list above
+
+### Email 6 — Florine Pontaillac, AIPD — new, due tuesday 12:00 (or flag a delay by monday 12:00)
+
+- [ ] AIPD allégée, 3 pages max: description du traitement, nécessité/proportionnalité,
+      risques (ce que l'app fait réellement, au moins 2 risques non traités + pourquoi),
+      mesures de réduction
+- [ ] purge automatisée des historiques de localisation au-delà de 90 jours: commande
+      unique, affiche examinés/supprimés, couvre aussi les enregistrements antérieurs
+      à l'introduction de la durée, ne touche ni offres ni candidatures ni comptes
+      (décompte avant/après à fournir), rejouable sans dégât
+- [ ] export des données personnelles (art. 20, portabilité), JSON/CSV, déclenchable
+      depuis l'espace personnel, complet (candidatures, historique de localisation,
+      consentements), rien d'un autre utilisateur, un compte neuf sans activité
+      produit un fichier valide et non une erreur
+- [ ] mention d'information avant la première activation de la géolocalisation (pas
+      dans les CGU), consultable depuis les réglages, contenu identique à la fiche
+      de registre déjà transmise
+- [ ] si le délai de mardi n'est pas tenable: écrire à Florine avant **lundi 12h00**
+      en précisant lequel des quatre points est reporté et pourquoi - elle l'a dit
+      explicitement, un report motivé passe, un manquant découvert mardi midi non
