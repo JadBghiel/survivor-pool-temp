@@ -303,3 +303,9 @@ read docs/EMAILS.md for the full email text and what's already been sent back.
 - [ ] si le délai de mardi n'est pas tenable: écrire à Florine avant **lundi 12h00**
       en précisant lequel des quatre points est reporté et pourquoi - elle l'a dit
       explicitement, un report motivé passe, un manquant découvert mardi midi non
+
+
+## Admin account:
+	- mail: testAdmin@gmail.com
+	- password: admin123
+	- install: npm install -D tsx (if not installed)
