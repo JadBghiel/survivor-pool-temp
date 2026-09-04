@@ -309,3 +309,4 @@ read docs/EMAILS.md for the full email text and what's already been sent back.
 	- mail: testAdmin@gmail.com
 	- password: admin123
 	- install: npm install -D tsx (if not installed)
+      
