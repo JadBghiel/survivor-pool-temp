@@ -229,14 +229,17 @@ read docs/EMAILS.md for the full email text and what's already been sent back.
 
 ### Email 1b — Benjamin Sellami, charte graphique / name / video — friday 12:00
 
-- [ ] apply the ministerial charte graphique everywhere: `#1B3A6B` primary (never as
-      a button background), Marianne for titles / Spectral for body, logo top-left -
-      checked, none of this exists in src/ yet
-- [ ] produce the conformity checklist: every screen reviewed, "conforme" or "à
-      faire, prévu [date]"
-- [ ] trim or re-cut the demo video - `docs/raw-survivor-pool.webm` is 2:03, Benjamin's
-      limit here is 2:00 (JEB's email 4 limit is 3:00, that one's fine as-is, this is
-      a stricter, separate requirement)
+- [x] apply the ministerial charte graphique on the screens that exist today:
+      homepage, 404, 500, loading - `#1B3A6B` as accent only (never a button
+      background), real Marianne/Spectral files sourced from `@gouvfr/dsfr` (the
+      state's own design system npm package). login modal and empty state still
+      pending, see docs/CHARTE_CHECKLIST.md
+- [x] produce the conformity checklist - docs/CHARTE_CHECKLIST.md, honest about
+      what's done vs pending, flags the Marianne license needs Benjamin's sign-off
+      before public use
+- [x] trim the demo video - `docs/video-benjamin-under-2min.webm`, 1:58, under
+      Benjamin's 2:00 limit (separate file from the one already sent to JEB, whose
+      3:00 limit the original 2:03 cut already satisfied)
 - [x] name: staying with "ChomageGo" instead of Benjamin's "GéoEmploi" ask - team
       call, not a blocker, no action needed
 

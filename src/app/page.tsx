@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import JobsMap from './JobsMapClient'
 import { LocateMeButton } from '@/components/LocateMeButton'
 import { AuthHeader } from '@/components/AuthHeader'
+import { Logo } from '@/components/Logo'
 
 // the db is read per request, never at build time. milestone 1 replaces this
 // whole page with the leaflet map and this list becomes the mobile bottom sheet
@@ -26,15 +27,29 @@ export default async function Home() {
     <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
       <AuthHeader />
       <header className="mb-8">
-        <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
-          Ministère du job & bnoheur
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">ChomageGo</h1>
+        {/* esoace de protection dmd par benjamin en haut a gauche */ }
+        <div className="mb-6 space-y-1 pb-2">
+          <p
+            className="text-[11px] font-bold uppercase tracking-wide text-[var(--color-institutional-blue)]"
+            style={{ fontFamily: 'var(--font-marianne)' }}
+          >
+            République Française
+          </p>
+          <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
+            Ministère du Job et Bonheur
+          </p>
+        </div>
+        <h1 className="mt-1">
+          <Logo size={40} textClassName="text-3xl font-semibold tracking-tight sm:text-4xl" />
+        </h1>
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
           Consultation libre des offres, sans compte.{' '}
           {/* served by hono, not a next page, so next/link would break it */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a className="underline underline-offset-4" href="/api/docs">
+          <a
+            className="underline underline-offset-4 text-[var(--color-institutional-blue)]"
+            href="/api/docs"
+          >
             Documentation de l&apos;API
           </a>
         </p>
