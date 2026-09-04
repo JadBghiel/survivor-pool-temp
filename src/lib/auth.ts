@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken'
 
+// I put it inside a function because otherwise it'd be one of the first things to execute
+// and during SSG or build steps on platforms like Vercel, production variables might not be loaded yet.
+// and if it's missing at build time, it will fail the entire build
 export function getJwtSecret(): string {
     const secret = process.env.JWT_SECRET
     if (!secret) {
