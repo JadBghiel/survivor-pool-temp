@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../src/generated/prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
@@ -14,6 +15,18 @@ const jobs = [
 ]
 
 async function main() {
+  const adminPasswordHash = await bcrypt.hash('admin123', 10)
+  const admin = await prisma.user.upsert({
+    where: { email: 'testAdmin@gmail.com' },
+    update: {},
+    create: {
+      email: 'testAdmin@gmail.com',
+      passwordHash: adminPasswordHash,
+      role: 'ADMIN'
+    }
+  })
+  console.log(`Admin account seeded: ${admin.email} (Password: admin123)`)
+
   const employer = await prisma.user.upsert({
     where: { email: 'recrutement@ministere-job-bonheur.gouv.fr' },
     update: {},

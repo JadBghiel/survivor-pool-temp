@@ -178,6 +178,7 @@ export function AuthHeader() {
       setUser(data.user)
       setIsOpen(false)
       resetForm()
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -195,12 +196,24 @@ export function AuthHeader() {
           <div className="flex items-center gap-3">
             <div className="text-right text-xs">
               <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                {user.role === 'EMPLOYER'
+                {user.role === 'ADMIN'
+                  ? 'System Administrator'
+                  : user.role === 'EMPLOYER'
                   ? user.employerProfile?.companyName || user.email
                   : `${user.seekerProfile?.firstName || ''} ${user.seekerProfile?.lastName || ''}`.trim() || user.email}
               </p>
-              <p className="text-neutral-500">{user.role === 'EMPLOYER' ? 'Employer' : 'Job Seeker'}</p>
+              <p className="text-neutral-500">
+                {user.role === 'ADMIN' ? 'Administrator' : user.role === 'EMPLOYER' ? 'Employer' : 'Job Seeker'}
+              </p>
             </div>
+            {user.role === 'ADMIN' && (
+              <button
+                onClick={() => router.push('/admin')}
+                className="rounded bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700"
+              >
+                Admin Dashboard
+              </button>
+            )}
             {user.role === 'EMPLOYER' && (
               <button
                 onClick={() => {
