@@ -1,21 +1,21 @@
-# geoemploi
+# ChomageGO (FKA geoemploi)
 
-geolocated job listings
+chomagego job listings
 
 see below how to test it locally 
 ## VERCEL IS PAUSED
-## AVAILABLE ON VERCEL [CLICK HERE](https://survivor-pool-temp.vercel.app/)
-## also we have [API REFERENCE](https://survivor-pool-temp.vercel.app/api/docs#tag/jobs)
-## and here you can check out [JOBS in the DB as json](https://survivor-pool-temp.vercel.app/api/jobs)
+# AVAILABLE ON VERCEL [CLICK HERE](https://survivor-pool-temp.vercel.app/)
+# also we have [API REFERENCE](https://survivor-pool-temp.vercel.app/api/docs#tag/jobs)
+# and here you can check out [JOBS in the DB as json](https://survivor-pool-temp.vercel.app/api/jobs)
 
 
 ## week 1 deliverable
 
 only 4 things graded friday
 
-- [ ] map interface to browse listings: no account needed
-- [ ] job seeker and employer account creation
-- [ ] publish at least one geolocated listing
+- [x] map interface to browse listings: no account needed
+- [x] job seeker and employer account creation
+- [x] publish at least one geolocated listing
 - [ ] oral presentation: demo + technical approach
 
 rest is week 2, applications dashboards admin panel moderation reporting archiving
@@ -145,11 +145,10 @@ THE MORE URGENT STUFF IS AT THE TOP in the list below so please dont do a task i
 
 ### core product (original brief's week 1 deliverable)
 
-- [ ] **build the publish a listing form.** wire the existing geocoder into an
+- [x] **build the publish a listing form.** wire the existing geocoder into an
       employer-facing form so listings can be created from the product itself, rather
       than only from the seed script. the single biggest priority against the week 1
-      deliverable ("publication of a geolocated listing") - nothing else on this list
-      matters if this doesn't exist by friday
+      deliverable ("publication of a geolocated listing")
 - [ ] confirm the map interface browses listings with no account required (already
       true today, just verify it stays true as the rest of this list lands)
 - [ ] confirm job-seeker and employer account creation both work end to end (done via
