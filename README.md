@@ -3,8 +3,8 @@
 chomagego job listings
 
 # AVAILABLE ON VERCEL [CLICK HERE](https://survivor-pool-temp.vercel.app/)
-# also we have [API REFERENCE](https://survivor-pool-temp.vercel.app/api/docs#tag/jobs)
-# and here you can check out [JOBS in the DB as json](https://survivor-pool-temp.vercel.app/api/jobs)
+### also we have [API REFERENCE](https://survivor-pool-temp.vercel.app/api/docs#tag/jobs)
+### and here you can check out [JOBS in the DB as json](https://survivor-pool-temp.vercel.app/api/jobs)
 you can also see below how to test it locally 
 
 
