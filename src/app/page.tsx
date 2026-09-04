@@ -55,7 +55,7 @@ export default async function Home() {
           </p>
           ) : (
           
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+        <ul className="mt-4 flex flex-col gap-3">
           {jobs.map((job) => (
             <li
               key={job.id}
