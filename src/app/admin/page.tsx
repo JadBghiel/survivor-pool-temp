@@ -33,102 +33,28 @@ type ActivityLog = {
   actor: string
 }
 
+const emptyStats = {
+  totalUsers: 0,
+  seekers: 0,
+  employers: 0,
+  admins: 0,
+  activeJobs: 0,
+  pendingJobs: 0,
+}
+
+const emptyUsers: UserItem[] = []
+const emptyJobs: JobItem[] = []
+const emptyLogs: ActivityLog[] = []
+
 export default function AdminPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'jobs' | 'logs'>('overview')
-
-  // Mock data for demonstration - replace with your API fetches
-  const [stats, setStats] = useState({
-    totalUsers: 1248,
-    seekers: 980,
-    employers: 265,
-    admins: 3,
-    activeJobs: 142,
-    pendingJobs: 8,
-  })
-
-  const [users, setUsers] = useState<UserItem[]>([
-    {
-      id: 'usr_1',
-      email: 'john.doe@example.com',
-      role: 'SEEKER',
-      status: 'ACTIVE',
-      createdAt: '2026-08-12',
-      seekerProfile: { firstName: 'John', lastName: 'Doe' },
-    },
-    {
-      id: 'usr_2',
-      email: 'contact@techsolutions.com',
-      role: 'EMPLOYER',
-      status: 'ACTIVE',
-      createdAt: '2026-08-15',
-      employerProfile: { companyName: 'Tech Solutions' },
-    },
-    {
-      id: 'usr_3',
-      email: 'spam.user@example.com',
-      role: 'SEEKER',
-      status: 'SUSPENDED',
-      createdAt: '2026-08-28',
-      seekerProfile: { firstName: 'Spam', lastName: 'Account' },
-    },
-  ])
-
-  const [jobs, setJobs] = useState<JobItem[]>([
-    {
-      id: 'job_101',
-      title: 'Full Stack Engineer',
-      company: 'Tech Solutions',
-      city: 'Nantes',
-      contractType: 'CDI',
-      status: 'PUBLISHED',
-      publishedAt: '2026-08-30',
-    },
-    {
-      id: 'job_102',
-      title: 'Marketing Specialist',
-      company: 'Growth Agency',
-      city: 'Paris',
-      contractType: 'CDD',
-      status: 'PENDING',
-      publishedAt: '2026-09-01',
-    },
-    {
-      id: 'job_103',
-      title: 'Urgent Data Analyst',
-      company: 'Unknown LLC',
-      city: 'Remote',
-      contractType: 'FREELANCE',
-      status: 'FLAGGED',
-      publishedAt: '2026-09-02',
-    },
-  ])
-
-  const [logs] = useState<ActivityLog[]>([
-    {
-      id: 'log_1',
-      action: 'USER_SUSPENDED',
-      target: 'spam.user@example.com',
-      timestamp: '2026-09-03 14:22',
-      actor: 'testAdmin@gmail.com',
-    },
-    {
-      id: 'log_2',
-      action: 'JOB_FLAGGED',
-      target: 'Job #job_103 (Urgent Data Analyst)',
-      timestamp: '2026-09-02 09:15',
-      actor: 'Automated Shield',
-    },
-    {
-      id: 'log_3',
-      action: 'ROLE_CHANGED',
-      target: 'contact@techsolutions.com -> EMPLOYER',
-      timestamp: '2026-08-15 11:04',
-      actor: 'System',
-    },
-  ])
+  const [stats, setStats] = useState(emptyStats)
+  const [users, setUsers] = useState<UserItem[]>(emptyUsers)
+  const [jobs, setJobs] = useState<JobItem[]>(emptyJobs)
+  const [logs, setLogs] = useState<ActivityLog[]>(emptyLogs)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -142,11 +68,24 @@ export default function AdminPage() {
     })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && data.role === 'ADMIN') {
-          setIsAdmin(true)
-        } else {
+        if (!data || data.role !== 'ADMIN') {
           router.push('/')
+          return
         }
+
+        setIsAdmin(true)
+
+        return fetch('/api/admin/overview', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      })
+      .then((res) => (res ? res.json() : null))
+      .then((data) => {
+        if (!data) return
+        setStats(data.stats ?? emptyStats)
+        setUsers(data.users ?? emptyUsers)
+        setJobs(data.jobs ?? emptyJobs)
+        setLogs(data.logs ?? emptyLogs)
       })
       .catch(() => {
         router.push('/')
