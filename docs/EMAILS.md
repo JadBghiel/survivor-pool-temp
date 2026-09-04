@@ -59,9 +59,37 @@ dépôt (la plupart dans `docs/`).
 
 ### 📌 Statut
 
-- [ ] Réponse envoyée
+- [x] Réponse envoyée
 
-*rien de rédigé pour l'instant - charte graphique non appliquée, vidéo 3s trop longue pour cette limite-ci. le nom "ChomageGo" au lieu de "GéoEmploi" reste un choix assumé, pas un blocage*
+> Bonjour Benjamin,
+>
+> Voici où nous en sommes sur les trois points.
+>
+> **1. Charte graphique.** Appliquée sur les écrans qui existent aujourd'hui : page
+> d'accueil, 404, 500, écran de chargement - checklist complète en pièce jointe,
+> honnête sur ce qui reste à faire (page de connexion, écran vide). Marianne et
+> Spectral sont les vrais fichiers officiels du Système de Design de l'État, pas
+> une police de substitution. Le bleu institutionnel `#1B3A6B` est utilisé en
+> accent, jamais en fond de bouton, comme demandé.
+>
+> Un point à faire valider de votre côté : la licence Marianne comporte des
+> conditions spécifiques réservées aux acteurs de l'État. Nous l'avons chargée
+> depuis la distribution officielle, mais c'est à vous de confirmer que cet usage
+> est couvert avant toute diffusion publique.
+>
+> **2. Le nom.** Il reste "ChomageGo" à l'écran, pas "GéoEmploi". C'est un choix
+> assumé par l'équipe, pas un oubli de notre part.
+>
+> **3. Vidéo.** Ci-jointe, 1:58, sous votre limite de 2 minutes. Même contenu que
+> celle envoyée au Ministre (qui avait une limite de 3 minutes), simplement
+> raccourcie de 3 secondes pour respecter la vôtre.
+>
+> Cordialement,
+> L'équipe ChomageGo
+>
+> > **📎 Pièces jointes**
+> > - [CHARTE_CHECKLIST.md](CHARTE_CHECKLIST.md)
+> > - [video-benjamin-under-2min.webm](video-benjamin-under-2min.webm)
 
 ---
 
