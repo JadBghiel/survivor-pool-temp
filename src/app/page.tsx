@@ -43,15 +43,18 @@ export default async function Home() {
           <LocateMeButton />
         </div>
       </header>
+        <div className="flex flex-col md:flex-row md:items-start gap-6 mt-4">
+          <div className="md:basis-3/5">
+            <JobsMap jobs={jobs} />
+          </div>
 
-        <JobsMap jobs={jobs} />
-
-      {jobs.length === 0 ? (
-        <p className="mt-4 rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
+        <div className="md:basis-2/5"> 
+          {jobs.length === 0 ? (
+          <p className="mt-4 rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
           Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
-        </p>
-      ) : (
-        // one column on mobile, two from sm up responsive
+          </p>
+          ) : (
+          
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {jobs.map((job) => (
             <li
@@ -69,6 +72,8 @@ export default async function Home() {
           ))}
         </ul>
       )}
+        </div> 
+      </div>
     </main>
   )
 }
