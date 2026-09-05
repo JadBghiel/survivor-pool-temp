@@ -36,8 +36,12 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
                 <li
                 key={job.id}
                 onClick={() => setSelectedJobId(job.id)}
-                className="rounded-lg border border-neutral-200 p-4 transition-colors hover:border-neutral-400 dark:border-neutral-800 dark:hover:border-neutral-600"
-                >
+                className={`cursor-pointer rounded-lg border p-4 transition-colors ${
+                    selectedJobId === job.id
+                        ? 'border-neutral-500 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-800'
+                        : 'border-neutral-200 hover:border-neutral-400 dark:border-neutral-800 dark:hover:border-neutral-600'
+                    }`}
+                    >
                 <span className="inline-block rounded bg-neutral-100 px-1.5 py-0.5 text-[11px] font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
                     {job.contractType}
                 </span>
