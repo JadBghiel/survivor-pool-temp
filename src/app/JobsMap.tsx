@@ -14,9 +14,10 @@ const IGN_ATTRIBUTION = '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a
 
 type JobsMapProps = {
     jobs: { id: string; latitude: number; longitude: number }[]
+    selectedJobId: string | null
 }
 
-function JobsMap({ jobs }: JobsMapProps) {
+function JobsMap({ jobs, selectedJobId }: JobsMapProps) {
     const map = useRef<L.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
@@ -44,6 +45,16 @@ function JobsMap({ jobs }: JobsMapProps) {
         map.current?.remove()
     }
     }, [jobs])
+
+        // cuando cambia la oferta seleccionada, vuela hasta ella
+    useEffect(() => {
+        if (!selectedJobId || !map.current) return
+
+        const job = jobs.find((j) => j.id === selectedJobId)
+        if (!job) return
+
+        map.current.flyTo([job.latitude, job.longitude], 16)
+    }, [selectedJobId, jobs])
 
     return <div ref = {mapContainer} style={{width: "100%", height: "100vh"}}/>
 }
