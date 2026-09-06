@@ -21,6 +21,7 @@ type JobsMapProps = {
 function JobsMap({ jobs, selectedJobId, onSelectJob }: JobsMapProps) {
     const map = useRef<L.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement | null>(null);
+    const markersById = useRef<Record<string, L.CircleMarker>>({});
 
     useEffect(() => {
     // fall back to 0 0,
@@ -40,6 +41,7 @@ function JobsMap({ jobs, selectedJobId, onSelectJob }: JobsMapProps) {
     const markers = jobs.map((job) => {
         const marker = L.circleMarker([job.latitude, job.longitude], { radius: 8 }).addTo(map.current!)
         marker.on('click', () => onSelectJob(job.id))
+        markersById.current[job.id] = marker
         return marker
     })
 
@@ -51,6 +53,15 @@ function JobsMap({ jobs, selectedJobId, onSelectJob }: JobsMapProps) {
 
         // cuando cambia la oferta seleccionada, vuela hasta ella
     useEffect(() => {
+        // repinta todos los puntos: el seleccionado destaca, el resto normal
+        Object.entries(markersById.current).forEach(([id, marker]) => {
+            if (id === selectedJobId) {
+                marker.setStyle({ radius: 12, color: '#ea580c', fillColor: '#ea580c', fillOpacity: 0.9 })
+            } else {
+                marker.setStyle({ radius: 8, color: '#3388ff', fillColor: '#3388ff', fillOpacity: 0.2 })
+            }
+        })
+
         if (!selectedJobId || !map.current) return
 
         const job = jobs.find((j) => j.id === selectedJobId)
