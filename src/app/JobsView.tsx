@@ -22,7 +22,11 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
     return (
     <div className="flex flex-col md:flex-row md:items-start gap-6 mt-4">
         <div className="md:basis-3/5">
-        <JobsMap jobs={jobs} selectedJobId={selectedJobId} />
+        <JobsMap
+            jobs={jobs}
+            selectedJobId={selectedJobId}
+            onSelectJob={setSelectedJobId}
+        />
         </div>
 
         <div className="md:basis-2/5">

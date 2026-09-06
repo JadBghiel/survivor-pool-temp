@@ -15,9 +15,10 @@ const IGN_ATTRIBUTION = '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a
 type JobsMapProps = {
     jobs: { id: string; latitude: number; longitude: number }[]
     selectedJobId: string | null
+    onSelectJob: (id: string) => void
 }
 
-function JobsMap({ jobs, selectedJobId }: JobsMapProps) {
+function JobsMap({ jobs, selectedJobId, onSelectJob }: JobsMapProps) {
     const map = useRef<L.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
@@ -36,9 +37,11 @@ function JobsMap({ jobs, selectedJobId }: JobsMapProps) {
     }).addTo(map.current)
 
     // circleMarker skips leaflets default pin ico
-    const markers = jobs.map((job) =>
-        L.circleMarker([job.latitude, job.longitude], { radius: 8 }).addTo(map.current!)
-    )
+    const markers = jobs.map((job) => {
+        const marker = L.circleMarker([job.latitude, job.longitude], { radius: 8 }).addTo(map.current!)
+        marker.on('click', () => onSelectJob(job.id))
+        return marker
+    })
 
     return () => {
         markers.forEach((marker) => marker.remove())
