@@ -10,6 +10,7 @@ import { DemoNotice } from '@/components/DemoNotice'
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
+// throw new Error('test') // TEST ERROR to see the error page
   const jobs = await prisma.job.findMany({
     where: { archivedAt: null },
     select: {
