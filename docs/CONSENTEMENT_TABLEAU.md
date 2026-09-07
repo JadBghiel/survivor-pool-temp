@@ -3,12 +3,11 @@
 Captures prises sur l'application qui tourne (`npm run dev`, 2026-09-05), pas des
 maquettes.
 
-> ⚠️ **Captures à reprendre.** Les captures d'origine portaient le bloc-marque du
-> Ministère et ont été archivées le 2026-09-07 (consigne de retrait, email 7 de Benjamin
-> Sellami) dans `archive/2026-09-07-charte-etat/docs/CONSENTEMENT_SCREENSHOTS/`. Le
-> comportement décrit dans le tableau ci-dessous reste exact, mais les captures qui
-> l'illustrent doivent être reprises sur l'interface neutre avant toute nouvelle
-> transmission de ce livrable au service juridique.
+Captures reprises le 2026-09-07 sur l'interface neutre, dans
+`CONSENTEMENT_SCREENSHOTS/`. Les captures d'origine portaient le bloc-marque du
+Ministère et ont été archivées le même jour (consigne de retrait, email 7 de M. Sellami)
+dans `archive/2026-09-07-charte-etat/docs/CONSENTEMENT_SCREENSHOTS/`. Le comportement
+décrit ci-dessous est inchangé.
 
 ## Tableau écran par écran
 

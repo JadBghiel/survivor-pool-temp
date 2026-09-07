@@ -380,7 +380,71 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 
 - [ ] Réponse envoyée
 
-*due mardi 12h00, ou signaler un report avant lundi 12h00 - rien de rédigé pour l'instant, pas commencée*
+**Report à jeudi 15h00 déjà annoncé** dans la réponse à l'email 9. L'AIPD est écrite
+(`docs/AIPD.md`). Les points 2 et 4 appellent une réponse de fond, ci-dessous. Le point
+3 (export de portabilité) reste à construire — c'est le seul des quatre qui demande du
+code, et il est encore ouvert au moment où ce brouillon est écrit.
+
+> Bonjour Madame Pontaillac,
+>
+> Voici l'analyse d'impact demandée, en pièce jointe, ainsi que ma réponse sur les trois
+> autres points. Deux d'entre eux appellent une réponse de fond plutôt qu'un livrable, et
+> je préfère vous l'expliquer que vous transmettre un artefact qui aurait l'apparence de
+> la conformité sans en avoir l'effet.
+>
+> **1. Analyse d'impact.** Jointe, trois pages. La section « risques » décrit le
+> fonctionnement réel du code, et nomme deux risques non traités avec leur raison :
+> l'absence de test automatisé garantissant que la position ne quitte jamais le
+> navigateur, et l'absence de journalisation des accès aux données depuis l'espace
+> d'administration. Aucun des deux n'expose de donnée aujourd'hui ; tous deux privent le
+> service des moyens de démontrer que ses garanties tiennent dans la durée. J'y signale
+> également un point de proportionnalité : le bouton récupère la position et l'affiche,
+> mais le tri par distance qui la justifie n'est pas encore branché dessus.
+>
+> **2. Mécanisme de purge des historiques de localisation.** Il n'y a rien à purger, et
+> c'est vérifiable : l'application ne conserve aucun historique de localisation. La
+> position du visiteur n'est jamais écrite en base de données, jamais transmise à notre
+> serveur, jamais posée en cookie ni en stockage local. Elle vit dans la mémoire de la
+> page et disparaît à la fermeture de la fenêtre. Il n'existe aucune table susceptible
+> de recevoir une durée de conservation de 90 jours, et donc aucune ligne qu'une tâche
+> de purge pourrait examiner ou supprimer.
+>
+> Je pourrais vous livrer une commande qui s'exécute, affiche « 0 enregistrement
+> examiné, 0 supprimé » et se termine correctement. Elle serait rejouable et sans
+> dégât, comme vous le demandez. Elle ne prouverait rien d'autre que l'absence de la
+> table qu'elle interroge. Je préfère vous donner le constat directement : la fiche de
+> registre que vous avez reçue le détaille table par table, et la colonne « stockée ? »
+> y répond « non, jamais » sur chaque ligne.
+>
+> Si votre analyse conclut qu'une tâche de purge doit exister malgré tout, comme garantie
+> contre une évolution future du produit, dites-le moi et je la construis en même temps
+> que la première fonctionnalité qui conserverait une position.
+>
+> **3. Export des données personnelles.** C'est le seul des quatre points qui demande du
+> développement, et il n'est pas terminé. Deux précisions sur ce qu'il contiendra
+> réellement : les candidatures et l'historique de localisation ne pourront pas y
+> figurer, les premières parce que la fonctionnalité de candidature n'est pas encore
+> construite, le second parce qu'il n'existe pas. L'export portera donc sur le compte et
+> le profil, c'est-à-dire sur tout ce que l'application détient effectivement de la
+> personne. Un compte neuf sans activité produira un fichier valide.
+>
+> **4. Mention d'information avant la première activation.** Elle existe déjà, et elle
+> va au-delà de votre demande sur un point : elle s'affiche non pas seulement avant la
+> première activation, mais avant chaque demande de position, le choix n'étant jamais
+> reconduit tacitement. Elle est hors CGU, comme demandé. Son contenu correspond à la
+> fiche de registre.
+>
+> Ce qui manque est le second volet de votre demande : sa consultation permanente depuis
+> les réglages du compte. Il n'existe aujourd'hui aucun espace de réglages où la loger.
+> C'est un écran à construire, et il est lié au point 3, puisque l'export doit lui aussi
+> être déclenchable depuis cet espace.
+>
+> Bien cordialement,
+> L'équipe GéoEmploi
+>
+> > **📎 Pièces jointes**
+> > - [AIPD.md](AIPD.md) — analyse d'impact, 3 pages
+> > - [RGPD_FICHE_TRAITEMENT.md](RGPD_FICHE_TRAITEMENT.md) — pour mémoire, à l'appui du point 2
 
 ---
 
@@ -482,3 +546,212 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 > > - [NEUTRE_EMPLOI&PIED_DE_PAGE.png](<SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_EMPLOI&PIED_DE_PAGE.png>)
 > > - [NEUTRE_CHARGEMENT.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_CHARGEMENT.png)
 > > - [NEUTRE_PAGE_ERREUR.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_PAGE_ERREUR.png)
+
+---
+
+## 📧 Email 8 — Mme Pontaillac (pièces jointes manquantes + forme d'adresse)
+**Reçu le 2026-09-07**
+
+> Bonjour,
+>
+> Je n'ai reçu aucune des quatre pièces jointes mentionnées dans votre mail. Je ne peux donc pas procéder à leur revue ni vous confirmer quoi que ce soit sur leur contenu.
+>
+> Merci de me les renvoyer dans un nouvel envoi. Compte tenu du nombre de documents et de versions qui circulent actuellement, vérifiez bien que les quatre fichiers sont effectivement joints avant l'envoi.
+>
+> Par ailleurs, je vous rappelle que dans le cadre de nos échanges professionnels, merci de vous adresser à moi en utilisant « Madame Pontaillac » et non « Florine ».
+>
+> Bien cordialement,
+>
+> Florine Pontaillac - Conseillère juridique
+
+### 📌 Statut
+
+- [ ] Réponse envoyée
+
+**Les trois blocages sont levés (2026-09-07)** : clause d'abonnement retirée des CGU,
+captures de consentement reprises sur l'interface neutre, nom GéoEmploi appliqué dans
+les deux documents concernés. Prêt à envoyer — **vérifier que les 5 pièces jointes sont
+effectivement attachées avant expédition**, c'est exactement ce qui a manqué la
+première fois.
+
+> Bonjour Madame Pontaillac,
+>
+> Toutes mes excuses pour cet envoi incomplet, et merci de me l'avoir signalé plutôt
+> que d'attendre. Les quatre livrables sont joints au présent message, vérifiés un par
+> un avant envoi.
+>
+> Trois d'entre eux ont été repris depuis votre première demande, pour tenir compte des
+> instructions reçues entre-temps :
+>
+> Le projet de CGU ne comporte plus de clause d'abonnement employeur. Elle est
+> remplacée par une clause de gratuité, conformément à votre instruction de retour à la
+> version 1.0.
+>
+> Les captures du parcours de consentement ont été reprises sur l'interface, qui ne
+> porte plus le bloc-marque de l'État depuis le retrait demandé par M. Sellami. Les
+> captures d'origine sont conservées dans notre dépôt, mises de côté et non diffusées.
+>
+> Le nom du service est « GéoEmploi » dans l'ensemble des documents, comme dans
+> l'interface.
+>
+> Le contenu de fond des quatre livrables est inchangé par rapport à ce que je vous
+> décrivais : la fiche de registre détaille table par table ce que devient la position
+> du visiteur, et il n'y a pas de table, précisément — la coordonnée ne quitte jamais
+> le navigateur. L'audit RGAA signale toujours le défaut de comportement au clavier de
+> la fenêtre de connexion, avec la correction proposée. Chaque clause du projet de CGU
+> reste marquée « existant » ou « intention ».
+>
+> Bien cordialement,
+> L'équipe GéoEmploi
+>
+> > **📎 Pièces jointes** — 5 fichiers, vérifiés avant envoi
+> > - [RGPD_FICHE_TRAITEMENT.md](RGPD_FICHE_TRAITEMENT.md)
+> > - [CONSENTEMENT_TABLEAU.md](CONSENTEMENT_TABLEAU.md)
+> > - [position-acceptee.png](CONSENTEMENT_SCREENSHOTS/position-acceptee.png)
+> > - [position-refusee.png](CONSENTEMENT_SCREENSHOTS/position-refusee.png)
+> > - [RGAA_AUDIT.md](RGAA_AUDIT.md)
+> > - [CGU_PROJET.md](CGU_PROJET.md)
+
+---
+
+## 📧 Email 9 — Mme Pontaillac (retour à la version 1.0 du cahier des charges)
+**Reçu le 2026-09-07 — porte aussi la position de Thomas Vignal et Benjamin Sellami**
+**Échéance : mardi 12h00 pour les retraits et la reprise des données, jeudi pour la page Transparence**
+
+> Bonjour,
+>
+> Florine Pontaillac. Nous sortons, mes deux collègues et moi, d'une réunion de deux heures avec le directeur de cabinet. Le Ministre a été convoqué par le Premier ministre en fin de matinée. Je vous écris avec l'accord de Thomas Vignal et de Benjamin Sellami : vous pouvez considérer que le présent message porte aussi leur position.
+>
+> **Instruction : vous revenez à la version 1.0 du cahier des charges, celle du lundi 31 août.**
+>
+> Le document annoté qui vous a été transmis mardi est retiré. Il n'a jamais fait l'objet d'une validation par la Direction Numérique et Innovation, et je vous confirme par écrit ce que je n'avais pas pu vous dire jusqu'ici : nous n'en avions pas été informés.
+>
+> **Ce que vous retirez du produit**
+> - Toute mécanique de capture, de collecte ou de « chasse » d'offres. Réalité augmentée, animations d'attrapage, compteurs de prises, badges de collection, classements de chasseurs, « Permis de Travailler ». Tout.
+> - Toute mention d'un abonnement, d'un tarif ou d'une contrepartie financière demandée aux employeurs, dans l'interface comme dans les CGU. La publication d'une offre est gratuite.
+> - La précision de localisation à la rue. Vous revenez à la maille commune, conformément au point 3.2 du cahier des charges initial. Une offre s'affiche au centroïde de la commune, pas à l'adresse.
+> - Le nom de travail utilisé par le Ministre, partout : interface, dépôt, noms de branches, titres de documents, métadonnées. Le service s'appelle **GéoEmploi**.
+>
+> **Ce que deviennent les données déjà produites sous ces règles**
+> C'est le point le plus lourd, et c'est celui que l'on oublie systématiquement. Retirer une fonctionnalité de l'interface ne retire pas ce qu'elle a produit en base pendant cinq jours. Une donnée qu'on n'affiche plus reste une donnée collectée : le masquage n'est pas une suppression.
+> - Les coordonnées enregistrées à l'adresse doivent être ramenées à la maille communale **en base**, de façon irréversible, sur les enregistrements déjà créés. Pas seulement à l'affichage. La colonne qui indique la précision retenue doit être mise à jour en conséquence.
+> - Les enregistrements produits par les mécaniques de jeu : vous tranchez entre suppression et conservation sous forme anonyme, et vous m'écrivez en trois lignes ce que vous avez choisi et pourquoi. Les deux réponses sont défendables, l'absence de réponse ne l'est pas.
+> - Les enregistrements liés à l'abonnement ou à la tarification subissent le même traitement, avec la même justification écrite.
+> - Dans tous les cas, les champs correspondants disparaissent des réponses de l'API et de votre spécification OpenAPI. Un champ vide qui subsiste dans une réponse, c'est une question de journaliste dans deux jours.
+>
+> **Ce qui doit continuer de marcher après ces retraits**
+> La consultation libre de la carte sans compte, la fiche d'une offre, le parcours de candidature, le tableau de bord employeur (privé de ses indicateurs payants), l'export de portabilité demandé vendredi, et la tâche de purge. L'export doit toujours produire un fichier valide, et il ne doit plus contenir les champs retirés.
+>
+> **Où le retrait doit être passé**
+> Interface, exports CSV et JSON, e-mails transactionnels, messages d'erreur, écrans vides, jeu de données de démonstration, tests, documentation et OpenAPI, CGU, guide d'utilisation remis jeudi, et captures déjà livrées. Je ne vous demande pas de retoucher la vidéo diffusée, mais de me dire ce qu'elle montre encore.
+>
+> **Ce que vous ajoutez**
+> - Une page publique « Transparence » énonçant la gratuité de la publication pour les employeurs, la maille de localisation retenue, la durée de conservation des données, et le contact du délégué à la protection des données.
+> - Un journal des modifications d'une page, listant ce que vous avez retiré, à quelle date, sur instruction de qui, et combien d'enregistrements ont été supprimés ou modifiés pour chaque ligne. Le décompte n'est pas un ornement : c'est la seule chose que je pourrai opposer à quelqu'un qui affirmera que rien n'a bougé.
+> - Deux captures d'une même offre, avant et après le retour à la maille communale.
+>
+> Échéance : **demain mardi 12h00** pour les retraits et la reprise des données, **jeudi** pour la page Transparence. Si l'ampleur de cette reprise se révélait incompatible avec le délai, écrivez-le avant **demain 9h00**, en indiquant quel point vous décalez et jusqu'à quand.
+>
+> Un mot pour finir, et je sors de mon rôle un instant. Je sais que vous avez travaillé cinq jours sur des fonctionnalités que je vous demande aujourd'hui de supprimer. Ce n'est pas votre faute et cela n'enlève rien à la qualité de ce que vous avez produit. Savoir défaire proprement un travail sur instruction du client fait partie du métier.
+>
+> Florine Pontaillac - Conseillère juridique
+
+### 📌 Statut
+
+- [ ] Réponse envoyée
+
+**Périmètre réel vérifié dans le code (2026-09-07) — l'essentiel du « retrait » est sans objet,
+un point est du vrai travail :**
+
+| Point de l'email | État réel chez nous |
+|---|---|
+| Mécaniques de jeu (AR, badges, prises, classements, Permis de Travailler) | Jamais construites. Aucune table, aucun composant, aucun enregistrement. Rien à retirer, rien à trancher sur les données |
+| Abonnement / tarif | 3 emplacements seulement : `LoginModal.tsx` (« Employer (€400/month) » à l'inscription), `CGU_PROJET.md` §4, `PROTOTYPE_DOCUMENTE.md`. Aucune table, aucun enregistrement en base |
+| Précision à la rue → maille commune | **Vrai travail.** Les 32 offres ont des coordonnées distinctes à l'adresse (11 Bordeaux, 7 Lyon, 7 Paris, 6 Marseille, 1 Nantes). Reprise irréversible en base à faire, local **et** Neon |
+| Colonne de précision retenue | N'existe pas. À créer (rejoint la traçabilité de géocodage demandée par Thomas dans l'email 1, jamais faite) |
+| Nom GéoEmploi partout | `Logo.tsx` (wordmark affiché), `layout.tsx`, `route.ts`, README, CGU, RGAA_AUDIT, PROTOTYPE_DOCUMENTE, schema.dbml. `package.json` et le conteneur Docker sont déjà `geoemploi` |
+| Doit continuer de marcher : fiche d'offre, parcours de candidature, tableau de bord employeur, export, purge | Aucun des cinq n'existe sur `main` aujourd'hui. À dire explicitement plutôt que de laisser croire qu'ils survivent au retrait |
+| Vidéo : dire ce qu'elle montre encore | Montre le bloc-marque de l'État et le nom ChomageGo. À décrire, pas à retoucher |
+
+### 📌 Réponse 1 — demande de report (envoyée avant mardi 9h00)
+
+- [x] Réponse envoyée
+
+> Bonjour Madame Pontaillac,
+>
+> Bien reçu, et merci pour la clarté des instructions
+>
+> Je vous écris avant 9h00 comme vous l'avez demandé, parce qu'une partie de la reprise ne tiendra pas dans le délai de demain midi.
+>
+> Nous avons une partie des fonctionnalités déjà en place (comme certains retraits demandé, le changement de nom, les documents etc).
+>
+> Mais il reste une partie non négligeable comme La reprise des coordonnées à la maille communale, et les preuves qui vont avec : la colonne de précision, le décompte avant/après par commune, les deux captures d'une même offre, et le journal des modifications.
+>
+> Nous vous proposons donc de modifier la data échéante a Jeudi 15h, pour nous donner le temps de finir les fonctionnalités et toutes la documentions qui va avec.
+>
+> Je reste joignable aujourd'hui si vous souhaitez un point d'étape avant jeudi.
+>
+> Bien cordialement, L'équipe GéoEmplo
+>
+> > **📎 Pièces jointes**
+> > _aucune — les livrables suivent jeudi 15h00_
+
+### 📌 Réponse 2 — livraison des retraits (à envoyer jeudi 15h00)
+
+- [ ] Réponse envoyée
+
+**État au 2026-09-07.** Fait : reprise des coordonnées (local + Neon), colonne de
+précision, retrait des mentions d'abonnement, renommage GéoEmploi, journal des
+modifications avec les décomptes. Reste à faire avant envoi : les deux captures d'une
+même offre avant/après (la capture « avant » est déjà prise), et la page Transparence.
+
+> Bonjour Madame Pontaillac,
+>
+> Comme annoncé lundi, voici la reprise complète.
+>
+> **Coordonnées ramenées à la maille communale.** C'est fait en base, sur les deux
+> bases — locale et en ligne — et de façon irréversible : les coordonnées d'adresse
+> d'origine ne sont conservées nulle part. 64 enregistrements modifiés au total, 32 sur
+> chaque base. Une colonne de précision de localisation a été ajoutée à la table des
+> offres, comme vous le demandiez ; après reprise, aucune offre n'y porte plus la valeur
+> « adresse exacte ». Le géocodage lui-même a été modifié : une offre publiée aujourd'hui
+> est géocodée à sa commune, l'adresse saisie n'étant plus convertie en coordonnées.
+>
+> Le journal des modifications joint donne le décompte commune par commune, avec l'écart
+> moyen et l'écart maximum entre l'ancienne position et le centroïde. Il va de 1,11 km à
+> Lyon à 3,89 km en moyenne à Marseille.
+>
+> Un point que je préfère signaler : les deux bases contiennent chacune 32 offres, mais
+> leur répartition diffère légèrement — 11 offres à Bordeaux en local contre 12 en ligne,
+> une offre à Nantes en local contre une à Tours en ligne. Cet écart préexistait à la
+> reprise et ne résulte pas d'elle. Le journal présente les deux décomptes séparément
+> plutôt qu'un total unique qui masquerait la différence.
+>
+> **Mentions d'abonnement.** Retirées de l'interface, du projet de CGU et de la
+> documentation. La clause « Abonnement employeur » des CGU est remplacée par une clause
+> de gratuité.
+>
+> **Nom.** « GéoEmploi » dans l'interface, les métadonnées, le titre d'onglet, la
+> documentation de l'API et les documents. Le nom de travail précédent ne subsiste que
+> dans l'historique du dépôt et dans les documents archivés, qui ne sont plus diffusés.
+>
+> **Mécaniques de jeu et abonnement, sort des enregistrements.** Ma réponse en trois
+> lignes, comme demandé : aucun enregistrement n'a jamais été produit par ces
+> mécaniques, ni par l'abonnement. Elles n'ont jamais été développées — la réalité
+> augmentée a fait l'objet d'une proposition écrite au Ministre restée sans suite, et la
+> mention tarifaire était un libellé d'interface sans traitement derrière. Il n'y a donc
+> ni suppression ni anonymisation à trancher, faute d'objet ; le constat est vérifiable
+> dans le schéma de base de données et l'historique du dépôt.
+>
+> **Ce que la vidéo diffusée montre encore.** Le bloc-marque du Ministère, le nom
+> précédent, et des offres positionnées à l'adresse exacte. Elle a été tournée avant vos
+> deux instructions. Conformément à votre demande, elle n'a pas été retouchée : elle est
+> retirée de la diffusion et archivée.
+>
+> Bien cordialement,
+> L'équipe GéoEmploi
+>
+> > **📎 Pièces jointes**
+> > - [JOURNAL_MODIFICATIONS.md](JOURNAL_MODIFICATIONS.md) — journal des modifications avec les décomptes
+> > - _capture avant / après d'une même offre — à joindre_
+> > - _page Transparence — à joindre_

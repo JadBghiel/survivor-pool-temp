@@ -25,8 +25,14 @@ l'API de géolocalisation du navigateur, avec deux boutons de poids visuel égal
 **Durée de conservation** : aucune. La coordonnée n'est jamais écrite en base de
 données, jamais envoyée dans une requête réseau vers notre serveur, jamais posée en
 cookie ni en stockage local du navigateur. Elle vit uniquement dans l'état mémoire
-du composant React (`useState`) et disparaît à la fermeture de la fenêtre de dialogue
-(clic sur Fermer, touche Échap, ou navigation) ou au rafraîchissement de la page.
+de la page (`useState`) et disparaît au rechargement ou à la fermeture de l'onglet.
+
+- la position est désormais transmise du dialogue vers la
+page qui porte la carte, afin d'y afficher un repère et de centrer la vue. Elle
+survit donc à la fermeture du dialogue, ce qui n'était pas le cas auparavant, et
+persiste tant que l'onglet reste ouvert sur la page. Cela ne change ni le lieu de
+stockage (aucun) ni le destinataire (aucun) : la donnée reste en mémoire du
+navigateur et n'est toujours transmise à aucun serveur.
 
 **Destinataires** : aucun. La donnée ne quitte jamais le navigateur dans ce flux -
 elle n'est lue que par le navigateur lui-même (API `navigator.geolocation`) et
