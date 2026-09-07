@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import JobsMap from './JobsMapClient'
 
 type Job = {
@@ -17,7 +17,17 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
   // aquí guardaremos la oferta seleccionada (por ahora sin usar)
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
 
-    console.log('Oferta seleccionada:', selectedJobId);
+    // guarda una referencia a cada tarjeta, por id
+    const cardRefs = useRef<Record<string, HTMLLIElement | null>>({})
+
+    // cuando cambia la selección, desliza la lista hasta esa tarjeta
+    useEffect(() => {
+        if (!selectedJobId) return
+        cardRefs.current[selectedJobId]?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        })
+    }, [selectedJobId])
 
     return (
     <div className="flex flex-col md:flex-row md:items-start gap-6 mt-4">
@@ -39,6 +49,7 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
             {jobs.map((job) => (
                 <li
                 key={job.id}
+                ref={(el) => { cardRefs.current[job.id] = el }}
                 onClick={() => setSelectedJobId(job.id)}
                 className={`cursor-pointer rounded-lg border p-4 transition-colors ${
                     selectedJobId === job.id
