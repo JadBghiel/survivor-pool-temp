@@ -10,8 +10,8 @@ import {
   ErrorSchema,
 } from '@/lib/schemas'
 import { haversineDistanceKm, boundingBoxKm } from '@/lib/haversine'
+import { verifyActiveUser, verifyAuthHeader } from '@/lib/auth'
 import { geocodeMunicipality } from '@/lib/geocode'
-import { verifyAuthHeader } from '@/lib/auth'
 
 // route definition and handler sit next to each other. the definition is what
 // becomes the openapi doc, so documenting an endpoint is not a separate chore.
@@ -119,6 +119,7 @@ jobs.openapi(listJobs, async (c) => {
   const rows = await prisma.job.findMany({
     where: {
       archivedAt: null,
+      status: 'PUBLISHED',
       ...(minLat !== undefined && maxLat !== undefined
         ? { latitude: { gte: minLat, lte: maxLat } }
         : {}),
@@ -145,6 +146,7 @@ jobs.openapi(nearbyJobs, async (c) => {
   const rows = await prisma.job.findMany({
     where: {
       archivedAt: null,
+      status: 'PUBLISHED',
       latitude: { gte: box.minLat, lte: box.maxLat },
       longitude: { gte: box.minLng, lte: box.maxLng },
     },
@@ -167,7 +169,7 @@ jobs.openapi(nearbyJobs, async (c) => {
 })
 
 jobs.openapi(publishJob, async (c) => {
-  const payload = verifyAuthHeader(c.req.header('Authorization'))
+  const payload = await verifyActiveUser(c.req.header('Authorization'))
   if (!payload) return c.json({ error: 'missing or invalid token' }, 401)
   if (payload.role !== 'EMPLOYER') return c.json({ error: 'only employers can publish listings' }, 403)
 
@@ -180,9 +182,15 @@ jobs.openapi(publishJob, async (c) => {
     return c.json({ error: `Coundt not locate this commune (${geocoded.reason})` }, 400)
   }
 
+  const employerProfile = await prisma.employerProfile.findUnique({
+    where: { userId: payload.sub },
+  })
+  if (!employerProfile)
+    return c.json({ error: 'Employer profile not found' }, 400)
+
   const row = await prisma.job.create({
     data: {
-      employerId: payload.sub,
+      employerId: employerProfile.userId,
       title,
       description,
       contractType,
@@ -202,7 +210,7 @@ jobs.openapi(publishJob, async (c) => {
 
 jobs.openapi(getJob, async (c) => {
   const { id } = c.req.valid('param')
-  const row = await prisma.job.findFirst({ where: { id, archivedAt: null }, select })
+  const row = await prisma.job.findFirst({ where: { id, archivedAt: null, status: 'PUBLISHED' }, select })
   if (!row) return c.json({ error: 'not found' }, 404)
   return c.json(toSummary(row), 200)
 })

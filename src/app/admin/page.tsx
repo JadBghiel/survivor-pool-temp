@@ -42,19 +42,34 @@ const emptyStats = {
   pendingJobs: 0,
 }
 
-const emptyUsers: UserItem[] = []
-const emptyJobs: JobItem[] = []
-const emptyLogs: ActivityLog[] = []
-
 export default function AdminPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'jobs' | 'logs'>('overview')
   const [stats, setStats] = useState(emptyStats)
-  const [users, setUsers] = useState<UserItem[]>(emptyUsers)
-  const [jobs, setJobs] = useState<JobItem[]>(emptyJobs)
-  const [logs, setLogs] = useState<ActivityLog[]>(emptyLogs)
+  const [users, setUsers] = useState<UserItem[]>([])
+  const [jobs, setJobs] = useState<JobItem[]>([])
+  const [logs, setLogs] = useState<ActivityLog[]>([])
+  const [actionError, setActionError] = useState<string | null>(null)
+
+  const fetchOverview = async (token: string) => {
+    try {
+      const res = await fetch('/api/admin/overview', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      if (data) {
+        setStats(data.stats ?? emptyStats)
+        setUsers(data.users ?? [])
+        setJobs(data.jobs ?? [])
+        setLogs(data.logs ?? [])
+      }
+    } catch (err) {
+      console.error('Failed to load overview data', err)
+    }
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -67,25 +82,13 @@ export default function AdminPage() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
+      .then(async (data) => {
         if (!data || data.role !== 'ADMIN') {
           router.push('/')
           return
         }
-
         setIsAdmin(true)
-
-        return fetch('/api/admin/overview', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-      })
-      .then((res) => (res ? res.json() : null))
-      .then((data) => {
-        if (!data) return
-        setStats(data.stats ?? emptyStats)
-        setUsers(data.users ?? emptyUsers)
-        setJobs(data.jobs ?? emptyJobs)
-        setLogs(data.logs ?? emptyLogs)
+        await fetchOverview(token)
       })
       .catch(() => {
         router.push('/')
@@ -95,20 +98,64 @@ export default function AdminPage() {
       })
   }, [router])
 
-  const toggleUserStatus = (userId: string) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId
-          ? { ...u, status: u.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE' }
-          : u
+  const toggleUserStatus = async (userId: string, currentStatus: 'ACTIVE' | 'SUSPENDED') => {
+    setActionError(null)
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    const newStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE'
+
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      })
+
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.error || 'Failed to update user status')
+      }
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
       )
-    );
+      await fetchOverview(token)
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Action failed')
+    }
   }
 
-  const updateJobStatus = (jobId: string, status: JobItem['status']) => {
-    setJobs((prev) =>
-      prev.map((j) => (j.id === jobId ? { ...j, status } : j))
-    )
+  const updateJobStatus = async (jobId: string, status: JobItem['status']) => {
+    setActionError(null)
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    try {
+      const res = await fetch(`/api/admin/jobs/${jobId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+      })
+
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.error || 'Failed to update job status')
+      }
+
+      setJobs((prev) =>
+        prev.map((j) => (j.id === jobId ? { ...j, status } : j))
+      )
+      await fetchOverview(token)
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Action failed')
+    }
   }
 
   if (loading) {
@@ -125,7 +172,6 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
-      {/* Top Header Bar */}
       <header className="border-b border-neutral-200 bg-white px-6 py-4 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -144,7 +190,12 @@ export default function AdminPage() {
       </header>
 
       <main className="mx-auto max-w-7xl p-6">
-        {/* Navigation Tabs */}
+        {actionError && (
+          <div className="mb-4 rounded-lg bg-red-100 p-3 text-xs font-medium text-red-800 dark:bg-red-950/80 dark:text-red-300">
+            {actionError}
+          </div>
+        )}
+
         <div className="mb-6 flex space-x-2 border-b border-neutral-200 pb-2 dark:border-neutral-800">
           {([
             { key: 'overview', label: 'System Overview' },
@@ -166,7 +217,7 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {/* Tab 1: System Overview */}
+        {/* System Overview */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -203,28 +254,10 @@ export default function AdminPage() {
                 <p className="mt-1 text-xs text-neutral-400">Database & Auth Operational</p>
               </div>
             </div>
-
-            <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-              <h2 className="text-sm font-bold">Quick Administration Actions</h2>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <button
-                  onClick={() => setActiveTab('jobs')}
-                  className="rounded-lg bg-neutral-900 px-4 py-2 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900"
-                >
-                  Review Pending Jobs ({stats.pendingJobs})
-                </button>
-                <button
-                  onClick={() => setActiveTab('users')}
-                  className="rounded-lg border border-neutral-300 px-4 py-2 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                >
-                  Manage User Accounts
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Tab 2: User Management */}
+        {/* User Management */}
         {activeTab === 'users' && (
           <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
@@ -266,7 +299,7 @@ export default function AdminPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
-                          onClick={() => toggleUserStatus(u.id)}
+                          onClick={() => toggleUserStatus(u.id, u.status)}
                           className={`rounded px-2.5 py-1 text-[11px] font-medium ${
                             u.status === 'ACTIVE'
                               ? 'bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-400'
@@ -284,7 +317,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Tab 3: Job Moderation */}
+        {/* Job Moderation */}
         {activeTab === 'jobs' && (
           <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
@@ -348,7 +381,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Tab 4: Audit Logs */}
+        {/* Audit Logs */}
         {activeTab === 'logs' && (
           <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
@@ -356,24 +389,28 @@ export default function AdminPage() {
             </div>
             <div className="p-6">
               <div className="space-y-3 font-mono text-xs">
-                {logs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-800/40"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="font-bold text-red-600 dark:text-red-400">
-                        [{log.action}]
-                      </span>
-                      <span className="text-neutral-700 dark:text-neutral-300">
-                        {log.target}
-                      </span>
+                {logs.length === 0 ? (
+                  <p className="text-xs text-neutral-500">No activity logged yet.</p>
+                ) : (
+                  logs.map((log) => (
+                    <div
+                      key={log.id}
+                      className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-800/40"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="font-bold text-red-600 dark:text-red-400">
+                          [{log.action}]
+                        </span>
+                        <span className="text-neutral-700 dark:text-neutral-300">
+                          {log.target}
+                        </span>
+                      </div>
+                      <div className="text-neutral-400 text-[11px]">
+                        By {log.actor} on {log.timestamp}
+                      </div>
                     </div>
-                    <div className="text-neutral-400 text-[11px]">
-                      By {log.actor} on {log.timestamp}
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>

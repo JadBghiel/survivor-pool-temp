@@ -12,14 +12,15 @@ export const dynamic = 'force-dynamic'
 export default async function Home() {
 // throw new Error('test') // TEST ERROR to see the error page
   const jobs = await prisma.job.findMany({
-    where: { archivedAt: null },
+    where: { archivedAt: null, status: 'PUBLISHED' },
     select: {
       id: true,
       title: true,
       city: true,
       contractType: true,
       latitude: true,
-      longitude: true, 
+      longitude: true,
+      status: true,
       employer: { select: { companyName: true } },
     },
     orderBy: { createdAt: 'desc' },
