@@ -119,6 +119,7 @@ jobs.openapi(listJobs, async (c) => {
   const rows = await prisma.job.findMany({
     where: {
       archivedAt: null,
+      status: 'PUBLISHED',
       ...(minLat !== undefined && maxLat !== undefined
         ? { latitude: { gte: minLat, lte: maxLat } }
         : {}),
@@ -145,6 +146,7 @@ jobs.openapi(nearbyJobs, async (c) => {
   const rows = await prisma.job.findMany({
     where: {
       archivedAt: null,
+      status: 'PUBLISHED',
       latitude: { gte: box.minLat, lte: box.maxLat },
       longitude: { gte: box.minLng, lte: box.maxLng },
     },
@@ -199,7 +201,7 @@ jobs.openapi(publishJob, async (c) => {
 
 jobs.openapi(getJob, async (c) => {
   const { id } = c.req.valid('param')
-  const row = await prisma.job.findFirst({ where: { id, archivedAt: null }, select })
+  const row = await prisma.job.findFirst({ where: { id, archivedAt: null, status: 'PUBLISHED' }, select })
   if (!row) return c.json({ error: 'not found' }, 404)
   return c.json(toSummary(row), 200)
 })

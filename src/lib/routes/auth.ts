@@ -52,6 +52,10 @@ const loginRoute = createRoute({
             content: { 'application/json': { schema: ErrorSchema } },
             description: 'Invalid credentials',
         },
+        403: {
+            content: { 'application/json': { schema: ErrorSchema } },
+            description: 'Account suspended'
+        }
     },
     path: '/auth/login',
 })
@@ -141,6 +145,9 @@ authApp.openapi(loginRoute, async (c) => {
     const isMatch = await bcrypt.compare(password, user.passwordHash)
     if (!isMatch) {
         return c.json({ error: 'Invalid email or password' }, 401)
+    }
+    if (user.status === 'SUSPENDED') {
+        return c.json({ error: 'Your account has been suspended. Please contact support.'}, 403)
     }
 
     const token = jwt.sign(
