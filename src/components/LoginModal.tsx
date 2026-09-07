@@ -126,7 +126,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: Props) {
                 className="mt-1 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-1.5 text-sm dark:border-neutral-700"
               >
                 <option value="SEEKER">Job Seeker</option>
-                <option value="EMPLOYER">Employer (€400/month)</option>
+                <option value="EMPLOYER">Employer</option>
               </select>
             </div>
           )}
