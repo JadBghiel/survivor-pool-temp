@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { prisma } from './db'
 
 // I put it inside a function because otherwise it'd be one of the first things to execute
 // and during SSG or build steps on platforms like Vercel, production variables might not be loaded yet.
@@ -23,4 +24,19 @@ export function verifyAuthHeader(authHeader: string | undefined): JwtPayload | n
     } catch {
         return null
     }
+}
+
+// helper function to check if a user is suspended before he does anything in the web
+export async function verifyActiveUser(authHeader?: string) {
+    const payload = verifyAuthHeader(authHeader)
+    if (!payload)
+        return null
+
+    const user = await prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: { status: true },
+    })
+    if (!user || user.status === 'SUSPENDED')
+        return null
+    return payload
 }

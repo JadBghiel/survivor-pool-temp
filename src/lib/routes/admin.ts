@@ -1,18 +1,18 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { prisma } from '@/lib/db'
-import { verifyAuthHeader } from '@/lib/auth'
+import { verifyActiveUser, verifyAuthHeader } from '@/lib/auth'
 
 export const adminApp = new OpenAPIHono()
 
 type AdminJwtPayload = {
-  id: string
+  sub: string
   email: string
   role: string
 }
 
 // middleware function to check if the incoming request has a valid JWT token.
-function requireAdmin(authorizationHeader?: string) {
-  const payload = verifyAuthHeader(authorizationHeader) as AdminJwtPayload | null
+async function requireAdmin(authorizationHeader?: string) {
+  const payload = await verifyActiveUser(authorizationHeader)
   if (!payload)
     return { error: 'missing or invalid token', status: 401 as const }
   if (payload.role !== 'ADMIN')
@@ -88,7 +88,7 @@ const updateJobStatusRoute = createRoute ({
 // formats the values to ISO strings so they can be read
 // and returns the structured JSON payload to the dashboard.
 adminApp.openapi(overviewRoute, async (c) => {
-  const auth = requireAdmin(c.req.header('Authorization')) //block non-admins
+  const auth = await requireAdmin(c.req.header('Authorization')) //block non-admins
   if ('error' in auth)
     return c.json({ error: auth.error }, auth.status)
 
@@ -169,7 +169,7 @@ adminApp.openapi(overviewRoute, async (c) => {
 // It pulls the target userId from the path and target status from the JSON body.
 // It'll then update the user's status and insert a record into the AuditLog table.
 adminApp.openapi(updateUserStatusRoute, async (c) => {
-  const auth = requireAdmin(c.req.header('Authorization'))
+  const auth = await requireAdmin(c.req.header('Authorization'))
   if ('error' in auth)
     return c.json({ error: auth.error }, auth.status)
 
@@ -190,7 +190,7 @@ adminApp.openapi(updateUserStatusRoute, async (c) => {
       action: actionText,
       target: `User ${targetUser.email} (${targetUser.id})`,
       actor: auth.payload.email,
-      actorId: auth.payload.id,
+      actorId: auth.payload.sub,
     },
   })
 
@@ -201,7 +201,7 @@ adminApp.openapi(updateUserStatusRoute, async (c) => {
 // It pulls the target jobId from the path and target status from the JSON body.
 // It'll then update the job's status and insert a record in the AuditLog table.
 adminApp.openapi(updateJobStatusRoute, async (c) => {
-  const auth = requireAdmin(c.req.header('Authorization'))
+  const auth = await requireAdmin(c.req.header('Authorization'))
   if ('error' in auth) return c.json({ error: auth.error }, auth.status)
 
   const jobId = c.req.param('id')
@@ -223,7 +223,7 @@ adminApp.openapi(updateJobStatusRoute, async (c) => {
       action: actionText,
       target: `Job "${targetJob.title}" (${targetJob.id})`,
       actor: auth.payload.email,
-      actorId: auth.payload.id,
+      actorId: auth.payload.sub,
     },
   })
 
