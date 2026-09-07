@@ -88,8 +88,8 @@ dépôt (la plupart dans `docs/`).
 > L'équipe ChomageGo
 >
 > > **📎 Pièces jointes**
-> > - [CHARTE_CHECKLIST.md](CHARTE_CHECKLIST.md)
-> > - [video-benjamin-under-2min.webm](video-benjamin-under-2min.webm)
+> > - [CHARTE_CHECKLIST.md](../archive/2026-09-07-charte-etat/docs/CHARTE_CHECKLIST.md)
+> > - [video-benjamin-under-2min.webm](../archive/2026-09-07-charte-etat/docs/video-benjamin-under-2min.webm)
 
 ---
 
@@ -214,8 +214,8 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 > > **📎 Pièces jointes**
 > > - [RGPD_FICHE_TRAITEMENT.md](RGPD_FICHE_TRAITEMENT.md)
 > > - [CONSENTEMENT_TABLEAU.md](CONSENTEMENT_TABLEAU.md)
-> > - [position-acceptee.png](CONSENTEMENT_SCREENSHOTS/position-acceptee.png)
-> > - [position-refusee.png](CONSENTEMENT_SCREENSHOTS/position-refusee.png)
+> > - [position-acceptee.png](../archive/2026-09-07-charte-etat/docs/CONSENTEMENT_SCREENSHOTS/position-acceptee.png)
+> > - [position-refusee.png](../archive/2026-09-07-charte-etat/docs/CONSENTEMENT_SCREENSHOTS/position-refusee.png)
 > > - [RGAA_AUDIT.md](RGAA_AUDIT.md)
 > > - [CGU_PROJET.md](CGU_PROJET.md)
 
@@ -268,10 +268,10 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 > L'équipe ChomageGo
 >
 > > **📎 Pièces jointes**
-> > - [USER_GUIDE.md](USER_GUIDE.md)
+> > - [USER_GUIDE.md](../archive/2026-09-07-charte-etat/docs/USER_GUIDE.md)
 > > - [PROTOTYPE_DOCUMENTE.md](PROTOTYPE_DOCUMENTE.md)
 > > - [PLAN_B.md](PLAN_B.md)
-> > - [raw-survivor-pool.webm](raw-survivor-pool.webm)
+> > - [raw-survivor-pool.webm](../archive/2026-09-07-charte-etat/docs/raw-survivor-pool.webm)
 
 ### 📌 Statut — Réponse 2 : proposition sur la réalité augmentée
 
@@ -340,12 +340,12 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 > L'équipe ChomageGo
 >
 > > **📎 Pièces jointes**
-> > - [PRESS_KIT.md](PRESS_KIT.md)
-> > - [CARTE AVEC OFFRES.png](PRESS_KIT_SCREENSHOTS/CARTE%20AVEC%20OFFRES.png)
-> > - [TABELAU DE BORD EMPLOYEUR.png](PRESS_KIT_SCREENSHOTS/TABELAU%20DE%20BORD%20EMPLOYEUR.png)
-> > - [FICHEE DETAILLE DE L'OFFRE.png](<PRESS_KIT_SCREENSHOTS/FICHEE DETAILLE DE L'OFFRE.png>)
-> > - [VUE MOBILE.png](PRESS_KIT_SCREENSHOTS/VUE%20MOBILE.png)
-> > - [PARCOURS CANDIDAT.png](PRESS_KIT_SCREENSHOTS/PARCOURS%20CANDIDAT.png)
+> > - [PRESS_KIT.md](../archive/2026-09-07-charte-etat/docs/PRESS_KIT.md)
+> > - [CARTE AVEC OFFRES.png](../archive/2026-09-07-charte-etat/docs/PRESS_KIT_SCREENSHOTS/CARTE%20AVEC%20OFFRES.png)
+> > - [TABELAU DE BORD EMPLOYEUR.png](../archive/2026-09-07-charte-etat/docs/PRESS_KIT_SCREENSHOTS/TABELAU%20DE%20BORD%20EMPLOYEUR.png)
+> > - [FICHEE DETAILLE DE L'OFFRE.png](<../archive/2026-09-07-charte-etat/docs/PRESS_KIT_SCREENSHOTS/FICHEE DETAILLE DE L'OFFRE.png>)
+> > - [VUE MOBILE.png](../archive/2026-09-07-charte-etat/docs/PRESS_KIT_SCREENSHOTS/VUE%20MOBILE.png)
+> > - [PARCOURS CANDIDAT.png](../archive/2026-09-07-charte-etat/docs/PRESS_KIT_SCREENSHOTS/PARCOURS%20CANDIDAT.png)
 
 ---
 
@@ -381,3 +381,104 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 - [ ] Réponse envoyée
 
 *due mardi 12h00, ou signaler un report avant lundi 12h00 - rien de rédigé pour l'instant, pas commencée*
+
+---
+
+## 📧 Email 7 — Benjamin Sellami (gel de communication + retrait du bloc-marque)
+**Reçu le 2026-09-07 — échéance 18h00 le jour même**
+
+> Bonjour à tous,
+>
+> Benjamin Sellami. Vous avez vu le journal de ce matin. Moi aussi. Je ne vais pas vous mentir, la matinée est très difficile ici.
+>
+> **1. Gel de la communication.** Plus aucune publication, aucun post, aucune capture d'écran, aucun visuel ne sort de vos équipes sans mon accord écrit. Si un journaliste, un étudiant, un ami ou quelqu'un de votre famille vous demande quoi que ce soit : vous ne répondez pas, vous me transférez la demande.
+>
+> **2. Retrait du bloc-marque du Ministère de vos interfaces.** Retirez le logo et le bloc-marque de toutes vos interfaces — page de connexion, écrans publics, écrans connectés, 404/500, écrans vides, favicon, titre d'onglet, manifeste, balises de partage, e-mails transactionnels, exports PDF/CSV, captures dans la documentation et le README, jeu de données de démonstration, vidéos déjà exportées.
+>
+> D'ici ce soir 18h :
+> - une identité neutre pour l'en-tête (police + couleur primaire qui ne soient pas celles de l'État), et trois lignes expliquant le choix ;
+> - un pied de page : « Démonstrateur technique, ne constitue pas un service public en exploitation. », sur toutes les pages publiques y compris les pages d'erreur, et dans les e-mails envoyés par l'application ;
+> - mise de côté (pas suppression) des documents déjà produits portant une référence visuelle à l'État ;
+> - la preuve : liste des endroits où le bloc apparaissait, et captures « après » des cinq écrans les plus visibles.
+>
+> Si à 18h ce n'est pas fait : pas de silence, envoyer la liste de ce qui reste avec une heure d'arrivée estimée.
+>
+> Benjamin Sellami - Conseiller en communication
+
+### 📌 Statut
+
+- [x] Réponse envoyée
+
+**Retrait effectué, vérifié et prouvé** : code applicatif, doc API, jeu de démonstration
+(local **et** Neon), fichiers de police, documents déjà livrés archivés, 5 captures
+"après" jointes. Relevé complet dans `docs/RETRAIT_BLOC_MARQUE.md`.
+
+> Bonjour Benjamin,
+>
+> Bien reçu. Deux choses, dans l'ordre de vos consignes.
+>
+> **Gel de la communication** : effectif immédiatement de notre côté. Plus aucune
+> publication, capture ni visuel ne sort de l'équipe sans votre accord écrit, et toute
+> sollicitation extérieure vous est transférée sans que nous y répondions.
+>
+> **Retrait du bloc-marque** : c'est fait. Le relevé complet est en pièce jointe — chaque
+> emplacement où le bloc, la charte ou une référence à l'État apparaissait, et ce qui a
+> été fait pour chacun. Les captures « après » des cinq écrans les plus visibles sont
+> jointes également.
+>
+> L'identité neutre, en trois lignes : **police système**, aucune police téléchargée —
+> elle ne peut être confondue avec Marianne et ne pose aucune question de licence.
+> **Couleur primaire teal `#0F766E`**, choisie parce qu'elle est chromatiquement loin du
+> bleu institutionnel, sans ambiguïté de lecture. **Une seule variable de couleur et une
+> seule de police** pilotent toute l'application, donc les écrans ne peuvent pas partir
+> dans trois directions différentes.
+>
+> Le pied de page « Démonstrateur technique, ne constitue pas un service public en
+> exploitation. » est en place sur toutes les pages publiques, pages d'erreur comprises.
+>
+> **Les cinq captures « après »** sont jointes : la page d'accueil, la page de connexion,
+> la page d'offres avec le pied de page, l'écran de chargement et la page d'erreur. Elles
+> montrent l'identité neutre en place et, là où elle s'applique, la mention de pied de page.
+>
+> **Documentation déjà produite** : tout ce qui portait le logo, le nom, la typographie ou
+> les couleurs du Ministère a été archivé — kit presse et ses captures, guide d'utilisation
+> et ses captures, checklist de charte graphique, captures du parcours de consentement, et
+> les deux vidéos exportées. Conservé dans le dépôt, plus diffusé, et plus présenté comme
+> représentatif du produit.
+>
+> Quatre points que je préfère vous signaler plutôt que vous les laisser découvrir :
+>
+> 1. Les fichiers de police Marianne et Spectral étaient **téléchargeables publiquement**
+> depuis l'application (`/fonts/Marianne-Regular.woff2`), même sans être affichés à
+> l'écran. Ils sont sortis du dossier servi. Conservés dans le dépôt, plus accessibles
+> depuis le web.
+>
+> 2. Le jeu de données de démonstration contenait un employeur nommé « Ministère du job &
+> bonheur » avec une adresse en `.gouv.fr`. Le point n'était pas qu'esthétique : notre
+> script de peuplement n'aurait **pas** supprimé l'ancienne ligne dans une base déjà
+> remplie, l'employeur aurait survécu au simple renommage. Corrigé, puis vérifié sur les
+> deux bases — la base locale et la base en ligne. Plus aucun employeur ni compte à
+> consonance étatique dans ni l'une ni l'autre.
+>
+> 3. Les captures du parcours de consentement transmises au service juridique portaient
+> elles aussi le bloc-marque. Elles sont archivées comme le reste, ce qui laisse
+> temporairement ce livrable sans ses illustrations : elles seront reprises sur
+> l'interface neutre. Je préfère vous le dire, et le dire à Mme Pontaillac, plutôt que de
+> laisser un dossier juridique incomplet sans prévenir.
+>
+> 4. Quatre points de votre liste sont **sans objet** chez nous aujourd'hui, et je préfère
+> l'écrire plutôt que de les cocher : nous n'avons ni manifeste d'application, ni balises
+> de partage, ni e-mails transactionnels, ni exports PDF/CSV. Ces fonctionnalités
+> n'existent pas dans le produit. Rien n'a donc été retiré à ces endroits, il n'y avait
+> rien à retirer.
+>
+> Cordialement,
+> L'équipe ChomageGo
+>
+> > **📎 Pièces jointes**
+> > - [RETRAIT_BLOC_MARQUE.pdf](RETRAIT_BLOC_MARQUE.pdf) — relevé complet des emplacements + identité retenue (source : `RETRAIT_BLOC_MARQUE.md`)
+> > - [NEUTRE_ACCUEIL.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_ACCUEIL.png)
+> > - [NEUTRE_PAGE_CONNEXION.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_PAGE_CONNEXION.png)
+> > - [NEUTRE_EMPLOI&PIED_DE_PAGE.png](<SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_EMPLOI&PIED_DE_PAGE.png>)
+> > - [NEUTRE_CHARGEMENT.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_CHARGEMENT.png)
+> > - [NEUTRE_PAGE_ERREUR.png](SCREENSHOT_IDENTITE_NEUTRE/NEUTRE_PAGE_ERREUR.png)
