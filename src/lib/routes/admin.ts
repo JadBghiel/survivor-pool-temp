@@ -179,9 +179,12 @@ adminApp.openapi(updateUserStatusRoute, async (c) => {
   if (!targetUser)
     return c.json({ error: 'User not found' }, 404)
 
+  // nico NEVER selecting passwordHash it would end up in the json response below and be aviabel for everyone to see
+  // so i restriced the select
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: { status },
+    select: { id: true, email: true, role: true, status: true, createdAt: true },
   })
 
   const actionText = status === 'SUSPENDED' ? 'SUSPEND_USER' : 'ACTIVATE_USER'
