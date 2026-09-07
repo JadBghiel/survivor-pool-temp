@@ -1,23 +1,13 @@
-// page not found page, as per benjamin email reuqiement
+// page not found page. bloc-marque de l'Etat retire le 2026-09-07 (email 7)
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
+import { DemoNotice } from '@/components/DemoNotice'
 
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center px-4 text-center">
-      <div className="mb-6 leading-tight">
-        <p
-          className="text-[11px] font-bold uppercase tracking-wide text-[var(--color-institutional-blue)]"
-          style={{ fontFamily: 'var(--font-marianne)' }}
-        >
-          République Française
-        </p>
-        <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
-          Ministère du Job et Bonheur
-        </p>
-      </div>
       <Logo size={26} textClassName="text-lg font-medium" />
-      <h1 className="mt-6 text-3xl font-semibold" style={{ fontFamily: 'var(--font-marianne)' }}>
+      <h1 className="mt-6 text-3xl font-semibold">
         Page introuvable
       </h1>
       <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
@@ -30,6 +20,7 @@ export default function NotFound() {
       >
         Retour à la carte
       </Link>
+      <DemoNotice className="mt-10" />
     </main>
   )
 }

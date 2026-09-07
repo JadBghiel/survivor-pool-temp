@@ -14,7 +14,7 @@ export const JobSummarySchema = z
   .object({
     id: z.string().openapi({ example: 'clx0000000000000000000000' }),
     title: z.string().openapi({ example: 'Développeur backend' }),
-    company: z.string().openapi({ example: 'Ministère du job & bonheur' }),
+    company: z.string().openapi({ example: 'Atlantique Logistique' }),
     city: z.string().openapi({ example: 'Nantes' }),
     contractType: ContractTypeSchema,
     latitude: z.number().openapi({ example: 47.2184 }),

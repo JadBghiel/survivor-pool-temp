@@ -22,7 +22,7 @@ app.doc('/openapi.json', {
     title: 'ChomageGo API',
     version: '0.1.0',
     description:
-      'Ministère du job & bonheur - JEB/DNI/2026-001. ' +
+      'Démonstrateur technique, ne constitue pas un service public en exploitation. ' +
       'Browsing listings is public and requires no account.',
   },
 })

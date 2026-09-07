@@ -1,54 +1,23 @@
 @import "tailwindcss";
 
-/* marianne font + spectral: charte graphique ministerielle as per benjamin email reuqiement
-   real font files sourced from @gouvfr/dsfr */
-@font-face {
-  font-family: 'Marianne';
-  src: url('/fonts/Marianne-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Marianne';
-  src: url('/fonts/Marianne-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Marianne';
-  src: url('/fonts/Marianne-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Spectral';
-  src: url('/fonts/Spectral-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Spectral';
-  src: url('/fonts/Spectral-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-display: swap;
-}
+/* identite neutre, 2026-09-07 (email 7 de benjamin sellami): plus aucune police ni
+   couleur de l'Etat. Marianne/Spectral retirees, plus aucun @font-face - on s'appuie
+   sur la pile systeme, donc aucun fichier de police n'est telecharge ni servi. */
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  /* bleu institutionnel #1B3A6B - couleur primaire, jamais en fond de bouton
-     (email de benjamin sellami) */
-  --color-institutional-blue: #1b3a6b;
-  --font-marianne: 'Marianne', ui-sans-serif, system-ui, sans-serif;
-  --font-spectral: 'Spectral', ui-serif, Georgia, serif;
+  /* couleur primaire du demonstrateur - teal, volontairement eloignee du bleu
+     institutionnel #1B3A6B qui a ete retire */
+  --color-accent: #0f766e;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-institutional-blue: var(--color-institutional-blue);
-  --font-sans: var(--font-marianne);
-  --font-serif: var(--font-spectral);
+  --color-accent: var(--color-accent);
+  --font-sans: var(--font-ui);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -56,6 +25,8 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* teal plus clair en sombre, pour garder le contraste AA */
+    --color-accent: #2dd4bf;
   }
 }
 
@@ -66,9 +37,5 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-spectral);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-marianne);
+  font-family: var(--font-ui);
 }
