@@ -3,7 +3,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'ChomageGo',
-  description: 'Offres d\'emploi géolocalisées - Ministère du job & bonheur',
+  description:
+    'Offres d\'emploi géolocalisées. Démonstrateur technique, ne constitue pas un service public en exploitation.',
 }
 
 // 3.1 - responsive. without this meta the mobile browser renders at desktop width.
