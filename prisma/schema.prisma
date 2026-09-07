@@ -36,6 +36,16 @@ enum ContractType {
   FREELANCE
 }
 
+// 3.2, cahier des charges v1.0: precision minimale = commune. l'email 9 (mme
+// pontaillac, 2026-09-07) precise l'application: une offre s'affiche au centroide
+// de sa commune, jamais a l'adresse exacte. EXACT documente l'ancien etat
+// (pre-2026-09-08), pour la reprise et le journal des modifications uniquement, 
+// plus aucune offre ne doit etre en EXACT apres la migration.
+enum LocationPrecision {
+  EXACT
+  MUNICIPALITY
+}
+
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
@@ -86,6 +96,8 @@ model Job {
   // bbox query on the viewport, no postgis needed at this scale.
   latitude     Float
   longitude    Float
+  // toujours le centroide de la commune depuis le 2026-09-08, jamais l'adresse
+  locationPrecision LocationPrecision @default(MUNICIPALITY)
   radiusKm     Int          @default(0)
   createdAt    DateTime     @default(now())
   // 2.2 - listings older than 30 days are archived. week 2 turns this into a job,

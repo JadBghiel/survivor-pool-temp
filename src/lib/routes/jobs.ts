@@ -10,8 +10,8 @@ import {
   ErrorSchema,
 } from '@/lib/schemas'
 import { haversineDistanceKm, boundingBoxKm } from '@/lib/haversine'
-import { geocodeAddress } from '@/lib/geocode'
 import { verifyActiveUser, verifyAuthHeader } from '@/lib/auth'
+import { geocodeMunicipality } from '@/lib/geocode'
 
 // route definition and handler sit next to each other. the definition is what
 // becomes the openapi doc, so documenting an endpoint is not a separate chore.
@@ -175,9 +175,11 @@ jobs.openapi(publishJob, async (c) => {
 
   const { title, description, contractType, address, city, postalCode, radiusKm } = c.req.valid('json')
 
-  const geocoded = await geocodeAddress({ address, city, postalCode })
+  // 3.2 stuff email 9: geocode the commune, the exact street address is kep as free text now
+  // offer displays at the commune centroid
+  const geocoded = await geocodeMunicipality({ city, postalCode })
   if (!geocoded.ok) {
-    return c.json({ error: `Coundt not locate this address (${geocoded.reason})` }, 400)
+    return c.json({ error: `Coundt not locate this commune (${geocoded.reason})` }, 400)
   }
 
   const employerProfile = await prisma.employerProfile.findUnique({
@@ -198,6 +200,7 @@ jobs.openapi(publishJob, async (c) => {
       radiusKm,
       latitude: geocoded.latitude,
       longitude: geocoded.longitude,
+      locationPrecision: 'MUNICIPALITY',
     },
     select,
   })
