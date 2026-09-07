@@ -11,6 +11,11 @@ type Job = {
     contractType: string
     latitude: number
     longitude: number
+    description: string
+    address: string
+    postalCode: string
+    radiusKm: number
+    createdAt: string
     employer: { companyName: string }
 }
 
@@ -72,6 +77,16 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
                 <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                     {job.employer.companyName} | {job.city}
                 </p>
+
+                {selectedJobId === job.id && (
+                    <div className="mt-3 border-t border-neutral-200 pt-3 text-sm dark:border-neutral-700">
+                    <p className="text-neutral-700 dark:text-neutral-300">{job.description}</p>
+                    <p className="mt-2 text-neutral-500">
+                        {job.address}, {job.postalCode} {job.city}
+                    </p>
+                    <p className="mt-1 text-neutral-500">Rayon : {job.radiusKm} km</p>
+                    </div>
+                )}
                 </li>
             ))}
             </ul>
