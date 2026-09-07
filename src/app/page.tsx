@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db'
 import JobsView from './JobsView'
-import { LocateMeButton } from '@/components/LocateMeButton'
 import { AuthHeader } from '@/components/AuthHeader'
 
 // the db is read per request, never at build time. milestone 1 replaces this
@@ -39,9 +38,6 @@ export default async function Home() {
           </a>
         </p>
         {/* temporary spot, milestone 1 moves this button onto the map itself */}
-        <div className="mt-4">
-          <LocateMeButton />
-        </div>
       </header>
       <JobsView jobs={jobs} />
     </main>

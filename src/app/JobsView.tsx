@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import JobsMap from './JobsMapClient'
+import { LocateMeButton } from '@/components/LocateMeButton'
 
 type Job = {
     id: string
@@ -17,6 +18,8 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
   // aquí guardaremos la oferta seleccionada (por ahora sin usar)
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
 
+    const [userPosition, setUserPosition] = useState<{ lat: number; lng: number } | null>(null)
+
     // guarda una referencia a cada tarjeta, por id
     const cardRefs = useRef<Record<string, HTMLLIElement | null>>({})
 
@@ -30,12 +33,17 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
     }, [selectedJobId])
 
     return (
+    <>
+    <div className="mb-4">
+        <LocateMeButton onLocated={(lat, lng) => setUserPosition({ lat, lng })} />
+    </div>
     <div className="flex flex-col md:flex-row md:items-start gap-6 mt-4">
         <div className="md:basis-3/5">
         <JobsMap
             jobs={jobs}
             selectedJobId={selectedJobId}
             onSelectJob={setSelectedJobId}
+            userPosition={userPosition}
         />
         </div>
 
@@ -70,5 +78,6 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
         )}
         </div>
     </div>
+    </>
     )
 }
