@@ -21,7 +21,7 @@ export function Logo({ size = 24, textClassName = '' }: { size?: number; textCla
         className={textClassName}
         style={{ fontFamily: 'var(--font-ui)', letterSpacing: '-0.02em' }}
       >
-        Chomage<span className="font-bold" style={{ color: 'var(--color-accent)' }}>Go</span>
+        Géo<span className="font-bold" style={{ color: 'var(--color-accent)' }}>Emploi</span>
       </span>
     </div>
   )

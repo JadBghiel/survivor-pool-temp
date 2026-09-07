@@ -6,7 +6,7 @@ prévue mais pas encore livrée.
 
 ## 1. Objet **[existant]**
 
-ChomageGo permet la consultation d'offres d'emploi géolocalisées sur une carte,
+GéoEmploi permet la consultation d'offres d'emploi géolocalisées sur une carte,
 sans compte, et la création d'un compte candidat ou employeur.
 
 ## 2. Accès et consultation **[existant]**
@@ -19,11 +19,10 @@ compte ni inscription préalable.
 Toute personne peut créer un compte candidat ou employeur avec une adresse e-mail
 et un mot de passe. Le mot de passe est stocké sous forme hachée, jamais en clair.
 
-## 4. Abonnement employeur **[intention]**
+## 4. Gratuité de la publication **[existant]**
 
-Un abonnement mensuel est prévu pour les employeurs souhaitant publier une offre.
-**Aucun paiement n'est aujourd'hui collecté ni exigé** - la publication d'une offre
-est actuellement possible sans paiement.
+La publication d'une offre par un employeur est gratuite. Aucun abonnement, aucun
+tarif et aucune contrepartie financière ne sont demandés, ni prévus.
 
 ## 5. Publication d'une offre **[existant]**
 

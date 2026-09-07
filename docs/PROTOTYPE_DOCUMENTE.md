@@ -1,4 +1,4 @@
-# ChomageGo — PROTOTYPE DOCUMENTATION
+# GéoEmploi — PROTOTYPE DOCUMENTATION
 
 
 ## En trois phrases
@@ -34,7 +34,6 @@ Le tout tourne sur un ordinateur ordinaire, sans abonnement.
   e-mail et mot de passe.
 - Connexion, déconnexion, et la session reste ouverte d'une visite à l'autre.
 - Les mots de passe ne sont jamais conservés en clair.
-- L'abonnement entreprise à 400 €/mois est affiché au moment de l'inscription.
 
 **Pour l'équipe qui reprendrait le projet**
 
@@ -69,8 +68,7 @@ Dans cet ordre, du plus utile au moins urgent.
 1. **Le formulaire de publication d'offre**, avec l'adresse transformée automatiquement en point
    sur la carte.
 2. **La candidature** : postuler depuis une offre, et suivre l'avancement de ses candidatures.
-3. **Le tableau de bord de l'entreprise** : offres publiées, nombre de vues, candidatures reçues,
-   et l'état de l'abonnement.
+3. **Le tableau de bord de l'entreprise** : offres publiées, nombre de vues, candidatures reçues.
 4. **L'espace administrateur** : voir, modérer, suspendre un compte, et les chiffres nationaux.
 5. **Un jeu de données crédible** : plusieurs centaines d'offres réparties sur toute la France,
    avec des entreprises et des intitulés qui tiennent debout.
@@ -79,16 +77,17 @@ Dans cet ordre, du plus utile au moins urgent.
    abusive.
 8. **La documentation technique et le bilan de projet**, attendus en fin de semaine 2.
 
-Puis, dans la foulée : l'affichage en temps réel, et la vue « à la Pokémon GO », d'abord simulée
-sur la carte avant toute réalité augmentée réelle.
+Le retour à la version 1.0 du cahier des charges (email du 2026-09-07) retire du périmètre
+toute mécanique de capture ou de « chasse » d'offres, ainsi que l'abonnement employeur :
+la publication d'une offre est gratuite.
 
 ---
 
 ## Deux choses à savoir avant le direct
 
-- **Le nom affiché à l'écran est « ChomageGo ».** C'est le nom de la version 1.1 de la
-  spécification. À noter que M. Sellami avait demandé « GéoEmploi » pour tout ce qui peut être
-  filmé ou capturé : si vous montrez la tablette, c'est « ChomageGo » qui apparaîtra.
+- **Le nom affiché à l'écran est « GéoEmploi ».** Conforme au cahier des charges v1.0 et à
+  l'instruction du 2026-09-07 : le nom de travail « ChomageGo » a été retiré de l'interface,
+  du dépôt, des documents et des métadonnées.
 - **Trois offres seulement sont visibles aujourd'hui.** Si le journaliste prend la tablette et
   clique partout, il verra une carte peu remplie et aucun bouton pour postuler. Nous pouvons
   remplir la base dans la matinée si vous nous donnez le feu vert.
