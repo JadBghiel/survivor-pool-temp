@@ -14,7 +14,7 @@ export const JobSummarySchema = z
   .object({
     id: z.string().openapi({ example: 'clx0000000000000000000000' }),
     title: z.string().openapi({ example: 'Développeur backend' }),
-    company: z.string().openapi({ example: 'Ministère du job & bonheur' }),
+    company: z.string().openapi({ example: 'Atlantique Logistique' }),
     city: z.string().openapi({ example: 'Nantes' }),
     contractType: ContractTypeSchema,
     latitude: z.number().openapi({ example: 47.2184 }),
@@ -50,3 +50,13 @@ export const JobNearbyListSchema = z.array(JobNearbySchema).openapi('JobNearbyLi
 export const ErrorSchema = z
   .object({ error: z.string().openapi({ example: 'not found' }) })
   .openapi('Error')
+
+export const PublishJobSchema = z.object({
+  title: z.string().min(1).openapi({ example: 'Développeur backend Node.js' }),
+  description: z.string().min(1).openapi({ example: 'CDI, équipe produit, télétravail partiel.' }),
+  contractType: ContractTypeSchema,
+  address: z.string().min(1).openapi({ example: '12 rue de la Fosse' }),
+  city: z.string().min(1).openapi({ example: 'Nantes' }),
+  postalCode: z.string().min(1).openapi({ example: '44000' }),
+  radiusKm: z.coerce.number().positive().max(200).default(25).openapi({ example: 25 }),
+})

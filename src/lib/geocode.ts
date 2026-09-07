@@ -1,14 +1,20 @@
 // server only
-// turns an address into coords using api adresse, the only geocoder the ministry allows now
-// nominatim and every commercial geocoder are banned
+// turns a commune name into its official centroid using api adresse, the only
+// geocoder the ministry allows now nominatim and every commercial geocoder are banned
 // https://adresse.data.gouv.fr/api-doc/adresse
+//
+// 2026/09/08 (email 9, mme pontaillac): geocoding no longer resolves the street
+// address. an offer is displayed at its commune's centroid, never the exact
+// address, reverted from street level per cahier des charges v1.0 point 3.2
+// api adresse's type=municipality already collapses paris/lyon/marseille
+// arrondissements to the single official commune (they are not separate insee
+// communes), so one centroid per (city, postcode) is exactly "commune level"
 
 const API_ADRESSE_URL = 'https://api-adresse.data.gouv.fr/search/'
 // no hard limit like nominatim's 1/sec, staying under the ~50/sec the docs mention
 const MIN_INTERVAL_MS = 100
 
-export type GeocodeInput = {
-  address: string
+export type GeocodeMunicipalityInput = {
   city: string
   postalCode: string
 }
@@ -41,15 +47,14 @@ function throttled<T>(fn: () => Promise<T>): Promise<T> {
   return run
 }
 
-export function geocodeAddress(input: GeocodeInput): Promise<GeocodeResult> {
-  return throttled(() => doGeocode(input))
+export function geocodeMunicipality(input: GeocodeMunicipalityInput): Promise<GeocodeResult> {
+  return throttled(() => doGeocodeMunicipality(input))
 }
 
-async function doGeocode({ address, city, postalCode }: GeocodeInput): Promise<GeocodeResult> {
-  // api adresse takes one free text query, not separate street/city fields
-  // postcode narrows to the right commune when streets share a name nationwide
+async function doGeocodeMunicipality({ city, postalCode }: GeocodeMunicipalityInput): Promise<GeocodeResult> {
   const params = new URLSearchParams({
-    q: `${address} ${city}`,
+    q: city,
+    type: 'municipality',
     postcode: postalCode,
     limit: '1',
   })

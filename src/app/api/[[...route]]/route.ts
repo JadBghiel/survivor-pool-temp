@@ -3,6 +3,7 @@ import { Scalar } from '@scalar/hono-api-reference'
 import { handle } from 'hono/vercel'
 import { jobs } from '@/lib/routes/jobs'
 import { authApp } from '@/lib/routes/auth'
+import { adminApp } from '@/lib/routes/admin'
 
 // prisma + pg need a real node runtime, not the edge one.
 export const runtime = 'nodejs'
@@ -11,6 +12,7 @@ const app = new OpenAPIHono().basePath('/api')
 
 app.route('/', jobs)
 app.route('/', authApp)
+app.route('/', adminApp)
 
 // 3.1 - documented restful api. the spec is generated from the same zod schemas
 // the handlers validate with, so it is always in sync with the code.
@@ -20,7 +22,7 @@ app.doc('/openapi.json', {
     title: 'ChomageGo API',
     version: '0.1.0',
     description:
-      'Ministère du job & bonheur - JEB/DNI/2026-001. ' +
+      'Démonstrateur technique, ne constitue pas un service public en exploitation. ' +
       'Browsing listings is public and requires no account.',
   },
 })
