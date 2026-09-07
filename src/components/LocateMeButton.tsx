@@ -18,7 +18,7 @@ const OUTCOME_MESSAGES: Record<Exclude<GeolocationResult['status'], 'success'>, 
 
 type Step = 'idle' | 'notice' | 'locating' | 'done'
 
-export function LocateMeButton() {
+export function LocateMeButton({ onLocated }: { onLocated: (lat: number, lng: number) => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [step, setStep] = useState<Step>('idle')
   const [result, setResult] = useState<GeolocationResult | null>(null)
@@ -39,6 +39,9 @@ export function LocateMeButton() {
     const outcome = await requestBrowserLocation()
     setResult(outcome)
     setStep('done')
+    if (outcome.status === 'success') {
+      onLocated(outcome.latitude, outcome.longitude)
+    }
   }
 
   function closeAfterResult() {

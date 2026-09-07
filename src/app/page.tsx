@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db'
-import JobsMap from './JobsMapClient'
-import { LocateMeButton } from '@/components/LocateMeButton'
+import JobsView from './JobsView'
 import { AuthHeader } from '@/components/AuthHeader'
 import { Logo } from '@/components/Logo'
 import { DemoNotice } from '@/components/DemoNotice'
@@ -27,7 +26,7 @@ export default async function Home() {
   })
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+    <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
       <AuthHeader />
       <header className="mb-8">
         {/* bloc-marque de l'Etat retire le 2026-09-07 (email 7, benjamin sellami) */}
@@ -46,37 +45,8 @@ export default async function Home() {
           </a>
         </p>
         {/* temporary spot, milestone 1 moves this button onto the map itself */}
-        <div className="mt-4">
-          <LocateMeButton />
-        </div>
       </header>
-
-        <JobsMap jobs={jobs} />
-
-      {jobs.length === 0 ? (
-        <p className="mt-4 rounded-lg border border-dashed border-neutral-300 p-6 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
-          Aucune offre. Lancez <code className="font-mono">npx prisma db seed</code> pour peupler la base.
-        </p>
-      ) : (
-        // one column on mobile, two from sm up responsive
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          {jobs.map((job) => (
-            <li
-              key={job.id}
-              className="rounded-lg border border-neutral-200 p-4 transition-colors hover:border-neutral-400 dark:border-neutral-800 dark:hover:border-neutral-600"
-            >
-              <span className="inline-block rounded bg-neutral-100 px-1.5 py-0.5 text-[11px] font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
-                {job.contractType}
-              </span>
-              <h2 className="mt-2 font-medium leading-snug">{job.title}</h2>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-                {job.employer.companyName} | {job.city}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
-
+      <JobsView jobs={jobs} />
       <DemoNotice className="mt-10 border-t border-neutral-200 pt-4 dark:border-neutral-800" />
     </main>
   )
