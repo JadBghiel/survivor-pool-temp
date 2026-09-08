@@ -1,174 +1,71 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-type UserRole = 'SEEKER' | 'EMPLOYER' | 'ADMIN'
-
-type UserItem = {
-  id: string
-  email: string
-  role: UserRole
-  createdAt: string
-  status: 'ACTIVE' | 'SUSPENDED'
-  seekerProfile?: { firstName: string; lastName: string } | null
-  employerProfile?: { companyName: string } | null
-}
-
-type JobItem = {
-  id: string
-  title: string
-  company: string
-  city: string
-  contractType: string
-  status: 'PUBLISHED' | 'PENDING' | 'FLAGGED'
-  publishedAt: string
-}
-
-type ActivityLog = {
-  id: string
-  action: string
-  target: string
-  timestamp: string
-  actor: string
-}
-
-const emptyStats = {
-  totalUsers: 0,
-  seekers: 0,
-  employers: 0,
-  admins: 0,
-  activeJobs: 0,
-  pendingJobs: 0,
-}
+import OverviewTab from './components/OverviewTab'
+import UserTab, { UserItem } from './components/UserTab'
+import JobTab, { JobItem } from './components/JobTab'
+import LogTab, { ActivityLog } from './components/LogTab'
 
 export default function AdminPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'jobs' | 'logs'>('overview')
-  const [stats, setStats] = useState(emptyStats)
   const [users, setUsers] = useState<UserItem[]>([])
   const [jobs, setJobs] = useState<JobItem[]>([])
   const [logs, setLogs] = useState<ActivityLog[]>([])
-  const [actionError, setActionError] = useState<string | null>(null)
-
-  const fetchOverview = async (token: string) => {
-    try {
-      const res = await fetch('/api/admin/overview', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (!res.ok) return
-      const data = await res.json()
-      if (data) {
-        setStats(data.stats ?? emptyStats)
-        setUsers(data.users ?? [])
-        setJobs(data.jobs ?? [])
-        setLogs(data.logs ?? [])
-      }
-    } catch (err) {
-      console.error('Failed to load overview data', err)
-    }
-  }
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/')
-      return
-    }
+    if (!token) return router.push('/')
 
-    fetch('/api/auth/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then(async (data) => {
-        if (!data || data.role !== 'ADMIN') {
-          router.push('/')
-          return
-        }
-        setIsAdmin(true)
-        await fetchOverview(token)
-      })
-      .catch(() => {
-        router.push('/')
-      })
-      .finally(() => {
+    fetch('/api/admin/overview', { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        setUsers(data.users ?? [])
+        setJobs(data.jobs ?? [])
+        setLogs(data.logs ?? [])
         setLoading(false)
       })
+      .catch(() => router.push('/'))
   }, [router])
 
-  const toggleUserStatus = async (userId: string, currentStatus: 'ACTIVE' | 'SUSPENDED') => {
-    setActionError(null)
+  const patchStatus = async (endpoint: string, body: object, onSuccess: () => void) => {
+    setError(null)
     const token = localStorage.getItem('token')
-    if (!token) return
-
-    const newStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE'
-
     try {
-      const res = await fetch(`/api/admin/users/${userId}/status`, {
+      const res = await fetch(endpoint, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: newStatus }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
       })
-
-      if (!res.ok) {
-        const errData = await res.json()
-        throw new Error(errData.error || 'Failed to update user status')
-      }
-
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
-      )
-      await fetchOverview(token)
+      if (!res.ok) throw new Error((await res.json()).error || 'Action failed')
+      onSuccess()
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Action failed')
+      setError(err instanceof Error ? err.message : 'Action failed')
     }
   }
 
-  const updateJobStatus = async (jobId: string, status: JobItem['status']) => {
-    setActionError(null)
-    const token = localStorage.getItem('token')
-    if (!token) return
-
-    try {
-      const res = await fetch(`/api/admin/jobs/${jobId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      })
-
-      if (!res.ok) {
-        const errData = await res.json()
-        throw new Error(errData.error || 'Failed to update job status')
-      }
-
-      setJobs((prev) =>
-        prev.map((j) => (j.id === jobId ? { ...j, status } : j))
-      )
-      await fetchOverview(token)
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Action failed')
-    }
+  // Derived stats directly from state — 0 extra state variables or counter math required
+  const stats = {
+    totalUsers: users.length,
+    seekers: users.filter((u) => u.role === 'SEEKER').length,
+    employers: users.filter((u) => u.role === 'EMPLOYER').length,
+    admins: users.filter((u) => u.role === 'ADMIN').length,
+    activeJobs: jobs.filter((j) => j.status === 'PUBLISHED').length,
+    pendingJobs: jobs.filter((j) => j.status === 'PENDING').length,
   }
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950">
-        <p className="text-sm font-medium text-neutral-500 animate-pulse">
+        <p className="animate-pulse text-sm font-medium text-neutral-500">
           Authenticating administrator access...
         </p>
       </div>
     )
   }
-
-  if (!isAdmin) return null
 
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
@@ -190,22 +87,22 @@ export default function AdminPage() {
       </header>
 
       <main className="mx-auto max-w-7xl p-6">
-        {actionError && (
+        {error && (
           <div className="mb-4 rounded-lg bg-red-100 p-3 text-xs font-medium text-red-800 dark:bg-red-950/80 dark:text-red-300">
-            {actionError}
+            {error}
           </div>
         )}
 
         <div className="mb-6 flex space-x-2 border-b border-neutral-200 pb-2 dark:border-neutral-800">
-          {([
+          {[
             { key: 'overview', label: 'System Overview' },
             { key: 'users', label: 'User Management' },
             { key: 'jobs', label: 'Job Moderation' },
             { key: 'logs', label: 'Audit Logs' },
-          ] as const).map((tab) => (
+          ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => { setError(null); setActiveTab(tab.key as typeof activeTab) }}
               className={`rounded-md px-4 py-2 text-xs font-semibold transition-colors ${
                 activeTab === tab.key
                   ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
@@ -217,204 +114,28 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {/* System Overview */}
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-xs font-medium text-neutral-500">Total Users</p>
-                <p className="mt-2 text-3xl font-extrabold">{stats.totalUsers}</p>
-                <p className="mt-1 text-xs text-neutral-400">
-                  {stats.seekers} Seekers · {stats.employers} Employers
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-xs font-medium text-neutral-500">Active Listings</p>
-                <p className="mt-2 text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                  {stats.activeJobs}
-                </p>
-                <p className="mt-1 text-xs text-neutral-400">Published and broadcasting</p>
-              </div>
-
-              <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-xs font-medium text-neutral-500">Pending Review</p>
-                <p className="mt-2 text-3xl font-extrabold text-amber-500">
-                  {stats.pendingJobs}
-                </p>
-                <p className="mt-1 text-xs text-neutral-400">Awaiting moderation approval</p>
-              </div>
-
-              <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-xs font-medium text-neutral-500">Platform Status</p>
-                <div className="mt-2 flex items-center space-x-2">
-                  <span className="h-3 w-3 rounded-full bg-emerald-500"></span>
-                  <span className="text-lg font-bold">Healthy</span>
-                </div>
-                <p className="mt-1 text-xs text-neutral-400">Database & Auth Operational</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* User Management */}
+        {activeTab === 'overview' && <OverviewTab stats={stats} />}
         {activeTab === 'users' && (
-          <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-              <h2 className="text-base font-bold">Registered Users</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-neutral-200 bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-400">
-                  <tr>
-                    <th className="px-6 py-3 font-semibold">User / Profile</th>
-                    <th className="px-6 py-3 font-semibold">Email</th>
-                    <th className="px-6 py-3 font-semibold">Role</th>
-                    <th className="px-6 py-3 font-semibold">Joined</th>
-                    <th className="px-6 py-3 font-semibold">Status</th>
-                    <th className="px-6 py-3 font-semibold text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-                  {users.map((u) => (
-                    <tr key={u.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30">
-                      <td className="px-6 py-4 font-medium">
-                        {u.role === 'EMPLOYER'
-                          ? u.employerProfile?.companyName || 'N/A'
-                          : `${u.seekerProfile?.firstName || ''} ${u.seekerProfile?.lastName || ''}`.trim() || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-neutral-500">{u.email}</td>
-                      <td className="px-6 py-4 font-semibold">{u.role}</td>
-                      <td className="px-6 py-4 text-neutral-500">{u.createdAt}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            u.status === 'ACTIVE'
-                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400'
-                              : 'bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-400'
-                          }`}
-                        >
-                          {u.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => toggleUserStatus(u.id, u.status)}
-                          className={`rounded px-2.5 py-1 text-[11px] font-medium ${
-                            u.status === 'ACTIVE'
-                              ? 'bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-400'
-                              : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400'
-                          }`}
-                        >
-                          {u.status === 'ACTIVE' ? 'Suspend' : 'Unsuspend'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <UserTab
+            users={users}
+            onToggleStatus={(id, current) =>
+              patchStatus(`/api/admin/users/${id}/status`, { status: current === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE' }, () =>
+                setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, status: current === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE' } : u)))
+              )
+            }
+          />
         )}
-
-        {/* Job Moderation */}
         {activeTab === 'jobs' && (
-          <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-              <h2 className="text-base font-bold">Job Post Moderation Queue</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-neutral-200 bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-400">
-                  <tr>
-                    <th className="px-6 py-3 font-semibold">Job Title</th>
-                    <th className="px-6 py-3 font-semibold">Company</th>
-                    <th className="px-6 py-3 font-semibold">Location</th>
-                    <th className="px-6 py-3 font-semibold">Type</th>
-                    <th className="px-6 py-3 font-semibold">Status</th>
-                    <th className="px-6 py-3 font-semibold text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-                  {jobs.map((j) => (
-                    <tr key={j.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30">
-                      <td className="px-6 py-4 font-medium">{j.title}</td>
-                      <td className="px-6 py-4 text-neutral-500">{j.company}</td>
-                      <td className="px-6 py-4">{j.city}</td>
-                      <td className="px-6 py-4 font-mono text-[11px]">{j.contractType}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            j.status === 'PUBLISHED'
-                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400'
-                              : j.status === 'PENDING'
-                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400'
-                              : 'bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-400'
-                          }`}
-                        >
-                          {j.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right space-x-2">
-                        {j.status !== 'PUBLISHED' && (
-                          <button
-                            onClick={() => updateJobStatus(j.id, 'PUBLISHED')}
-                            className="rounded bg-emerald-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-emerald-500"
-                          >
-                            Approve
-                          </button>
-                        )}
-                        {j.status !== 'FLAGGED' && (
-                          <button
-                            onClick={() => updateJobStatus(j.id, 'FLAGGED')}
-                            className="rounded bg-red-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-red-500"
-                          >
-                            Flag / Hide
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <JobTab
+            jobs={jobs}
+            onUpdateStatus={(id, status) =>
+              patchStatus(`/api/admin/jobs/${id}/status`, { status }, () =>
+                setJobs((prev) => prev.map((j) => (j.id === id ? { ...j, status } : j)))
+              )
+            }
+          />
         )}
-
-        {/* Audit Logs */}
-        {activeTab === 'logs' && (
-          <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            <div className="border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-              <h2 className="text-base font-bold">System Audit Trail</h2>
-            </div>
-            <div className="p-6">
-              <div className="space-y-3 font-mono text-xs">
-                {logs.length === 0 ? (
-                  <p className="text-xs text-neutral-500">No activity logged yet.</p>
-                ) : (
-                  logs.map((log) => (
-                    <div
-                      key={log.id}
-                      className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-800/40"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="font-bold text-red-600 dark:text-red-400">
-                          [{log.action}]
-                        </span>
-                        <span className="text-neutral-700 dark:text-neutral-300">
-                          {log.target}
-                        </span>
-                      </div>
-                      <div className="text-neutral-400 text-[11px]">
-                        By {log.actor} on {log.timestamp}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'logs' && <LogTab logs={logs} />}
       </main>
     </div>
   )
