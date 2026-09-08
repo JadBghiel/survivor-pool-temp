@@ -64,6 +64,7 @@ const publishJob = createRoute({
     400: { content: { 'application/json': { schema: ErrorSchema } }, description: 'validation error or address could not be geocoded' },
     401: { content: { 'application/json': { schema: ErrorSchema } }, description: 'missing or invalid token' },
     403: { content: { 'application/json': { schema: ErrorSchema } }, description: 'only employers can publish listings' },
+    500: { content: { 'application/json': { schema: ErrorSchema } }, description: 'Internal server error' },
   },
 })
 
@@ -188,24 +189,28 @@ jobs.openapi(publishJob, async (c) => {
   if (!employerProfile)
     return c.json({ error: 'Employer profile not found' }, 400)
 
-  const row = await prisma.job.create({
-    data: {
-      employerId: employerProfile.userId,
-      title,
-      description,
-      contractType,
-      address,
-      city,
-      postalCode,
-      radiusKm,
-      latitude: geocoded.latitude,
-      longitude: geocoded.longitude,
-      locationPrecision: 'MUNICIPALITY',
-    },
-    select,
-  })
-
-  return c.json(toSummary(row), 201)
+  try {
+    const row = await prisma.job.create({
+      data: {
+        employerId: employerProfile.userId,
+        title,
+        description,
+        contractType,
+        address,
+        city,
+        postalCode,
+        radiusKm,
+        latitude: geocoded.latitude,
+        longitude: geocoded.longitude,
+        status: 'PENDING'
+      },
+      select,
+    })
+    return c.json(toSummary(row), 201)
+  } catch (err) {
+    console.error('Failed to create job:', err)
+    return c.json({ error: 'Failed to create job listing' }, 500)
+  }
 })
 
 jobs.openapi(getJob, async (c) => {
