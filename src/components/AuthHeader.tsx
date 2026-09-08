@@ -15,6 +15,28 @@ export function AuthHeader() {
   const { user, setUser, logout } = useCurrentUser()
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isPublishOpen, setIsPublishOpen] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  // gdpr stuff downlaod ur data as json 
+  // GET /api/users/me/export renvoie, no transformatin
+  const exportData = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+    setIsExporting(true)
+    try {
+      const res = await fetch('/api/users/me/export', { headers: { Authorization: `Bearer ${token}` } })
+      if (!res.ok) return
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `mes-donnees-geoemploi-${new Date().toISOString().slice(0, 10)}.json`
+      link.click()
+      URL.revokeObjectURL(url)
+    } finally {
+      setIsExporting(false)
+    }
+  }
 
   return (
     <div className="flex items-center justify-end border-b border-neutral-200 pb-4 dark:border-neutral-800">
@@ -47,6 +69,15 @@ export function AuthHeader() {
                 className="rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
                 Publier une offre
+              </button>
+            )}
+            {user.role === 'SEEKER' && (
+              <button
+                onClick={exportData}
+                disabled={isExporting}
+                className="rounded bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-200 disabled:opacity-50 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+              >
+                {isExporting ? 'Export en cours...' : 'Exporter mes données'}
               </button>
             )}
             <button
