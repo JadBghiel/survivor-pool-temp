@@ -60,3 +60,12 @@ body {
     box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
   }
 }
+
+.job-popup {
+  position: fixed;
+  inset: 0;                /* ancla a los 4 lados del viewport */
+  margin: auto;            /* ← esto lo centra en horizontal Y vertical */
+  height: fit-content;     /* alto según contenido → permite centrar en vertical */
+  max-height: 85vh;        /* que no se salga en pantallas bajas */
+  overflow: auto;          /* si el texto es largo, scroll dentro del popup */
+}
