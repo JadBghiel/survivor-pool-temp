@@ -7,11 +7,12 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
 })
 
-// real coordinates so the demo map looks like a real map, not three dots in a field.
+// FIX: RM EXACT geocoeed adreese we are not doing tjhis anymroe now they are at the 
+//  centroides communaux que la migration of (commit a0b4af2)
 const jobs = [
-  { title: 'Développeur backend Node.js', contractType: 'CDI' as const, address: '12 rue de la Fosse', city: 'Nantes', postalCode: '44000', latitude: 47.2135, longitude: -1.5545 },
-  { title: 'Chargé de mission emploi', contractType: 'CDD' as const, address: '5 place Bellecour', city: 'Lyon', postalCode: '69002', latitude: 45.7578, longitude: 4.832 },
-  { title: 'Alternant data analyst', contractType: 'APPRENTICESHIP' as const, address: '2 rue Sainte-Catherine', city: 'Bordeaux', postalCode: '33000', latitude: 44.8378, longitude: -0.5792 },
+  { title: 'Développeur backend Node.js', contractType: 'CDI' as const, address: '12 rue de la Fosse', city: 'Nantes', postalCode: '44000', latitude: 47.239367, longitude: -1.555335 },
+  { title: 'Chargé de mission emploi', contractType: 'CDD' as const, address: '5 place Bellecour', city: 'Lyon', postalCode: '69002', latitude: 45.758, longitude: 4.835 },
+  { title: 'Alternant data analyst', contractType: 'APPRENTICESHIP' as const, address: '2 rue Sainte-Catherine', city: 'Bordeaux', postalCode: '33000', latitude: 44.851939, longitude: -0.587877 },
 ]
 
 async function main() {
@@ -67,6 +68,7 @@ async function main() {
       employerId: employer.id,
       description: `${j.title} basé à ${j.city}. Offre de démonstration.`,
       radiusKm: 25,
+      locationPrecision: 'MUNICIPALITY' as const,
     })),
   })
 
