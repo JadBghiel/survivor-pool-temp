@@ -382,8 +382,10 @@ tuiles + hit/miss. Brouillon ci-dessous à compléter avant envoi, pas à envoye
 
 **Report à jeudi 15h00 déjà annoncé** dans la réponse à l'email 9. L'AIPD est écrite
 (`docs/AIPD.md`). Les points 2 et 4 appellent une réponse de fond, ci-dessous. Le point
-3 (export de portabilité) reste à construire — c'est le seul des quatre qui demande du
-code, et il est encore ouvert au moment où ce brouillon est écrit.
+3 (export de portabilité) est construit et testé : `GET /api/users/me/export`,
+authentifié, scopé au compte appelant. Testé sur un compte neuf sans activité (export
+valide), sur un compte admin sans profil (export valide), et sur un compte employeur
+avec une offre publiée (export contenant exactement cette offre, aucune autre).
 
 > Bonjour Madame Pontaillac,
 >
@@ -420,13 +422,18 @@ code, et il est encore ouvert au moment où ce brouillon est écrit.
 > contre une évolution future du produit, dites-le moi et je la construis en même temps
 > que la première fonctionnalité qui conserverait une position.
 >
-> **3. Export des données personnelles.** C'est le seul des quatre points qui demande du
-> développement, et il n'est pas terminé. Deux précisions sur ce qu'il contiendra
-> réellement : les candidatures et l'historique de localisation ne pourront pas y
-> figurer, les premières parce que la fonctionnalité de candidature n'est pas encore
-> construite, le second parce qu'il n'existe pas. L'export portera donc sur le compte et
-> le profil, c'est-à-dire sur tout ce que l'application détient effectivement de la
-> personne. Un compte neuf sans activité produira un fichier valide.
+> **3. Export des données personnelles.** Disponible depuis l'API,
+> `GET /api/users/me/export`, authentifié et strictement limité au compte de l'appelant
+> — vérifié en testant avec plusieurs comptes différents qu'aucun ne peut voir les
+> données d'un autre. Il contient le compte, le profil, et pour un employeur ses
+> propres offres publiées. Les candidatures, l'historique de localisation et la trace
+> de consentement figurent dans le fichier sous forme de listes toujours vides, avec la
+> raison à chaque fois plutôt qu'une simple absence : la première fonctionnalité n'existe
+> pas encore, les deux autres ne sont jamais enregistrées. Un compte neuf sans activité
+> produit un export valide et complet, testé.
+>
+> Ce qui manque encore est le déclenchement depuis l'espace personnel — l'endpoint
+> existe, l'écran qui l'appellerait n'existe pas.
 >
 > **4. Mention d'information avant la première activation.** Elle existe déjà, et elle
 > va au-delà de votre demande sur un point : elle s'affiche non pas seulement avant la
@@ -755,3 +762,142 @@ même offre avant/après (la capture « avant » est déjà prise), et la page T
 > > - [JOURNAL_MODIFICATIONS.md](JOURNAL_MODIFICATIONS.md) — journal des modifications avec les décomptes
 > > - _capture avant / après d'une même offre — à joindre_
 > > - _page Transparence — à joindre_
+
+---
+
+## 📧 Email 10 — Benjamin Sellami (12 réponses presse pour ce soir)
+**Reçu le 2026-09-08 — échéance 19h00 le jour même**
+
+> Bonjour l'équipe,
+>
+> Benjamin. Le gel de communication reste en vigueur, vous ne parlez à personne. En revanche le cabinet, lui, doit être capable de répondre, et pour ça j'ai besoin de vous.
+>
+> Je reçois depuis hier soir les mêmes questions en boucle. Je ne peux pas y répondre seul, parce que la moitié porte sur ce que le produit fait réellement, et sur ce point la seule source fiable c'est vous.
+>
+> Il me faut un document pour ce soir 19h, répondant à ces douze questions. Une réponse factuelle, 3 lignes maximum, formulée pour être lue à voix haute. Pas de conditionnel, pas de « il semblerait ». Si la réponse est non, écrivez non.
+>
+> Et une contrainte qui va vous coûter plus que la rédaction : chaque réponse est accompagnée de sa source. L'endpoint, la table, l'écran ou le fichier qui permet de la vérifier. Une réponse sans source, je ne la lis pas au téléphone, parce que si on me la conteste je n'ai rien derrière.
+>
+> 1. Est-il exact qu'un employeur doit payer pour publier une offre sur GéoEmploi ?
+> 2. Un tarif a-t-il été implémenté dans l'application à un moment quelconque ? Si oui, entre quelles dates ?
+> 3. Quelles données de localisation l'application collecte-t-elle exactement, et à quelle maille ?
+> 4. Ces données sont-elles conservées ? Combien de temps, et depuis quand cette durée est-elle réellement appliquée ?
+> 5. L'application fonctionne-t-elle si l'utilisateur refuse la géolocalisation ?
+> 6. Un utilisateur peut-il être localisé à son adresse précise ?
+> 7. Un employeur peut-il voir où se trouve un candidat ?
+> 8. Combien de personnes sont réellement inscrites aujourd'hui ?
+> 9. L'application est-elle en production, ou s'agit-il d'un démonstrateur ?
+> 10. Qui a accès aux données en tant qu'administrateur, et combien de comptes disposent de ce droit aujourd'hui ?
+> 11. Un utilisateur peut-il supprimer son compte et ses données ? Le compte disparaît-il de la base, ou est-il seulement désactivé ?
+> 12. Les coordonnées enregistrées à l'adresse la semaine dernière existent-elles encore quelque part : en base, dans un export, dans une sauvegarde, dans votre jeu de données de démonstration ?
+>
+> Pour les questions 4, 8, 10, 11 et 12, je ne veux pas le chiffre que vous croyez, je veux le chiffre que vous avez lu aujourd'hui dans votre base, avec la requête qui l'a produit. Ce sont exactement celles qu'on me demandera de préciser.
+>
+> Et lorsque la réponse honnête est « ce n'est pas implémenté » ou « ce n'est pas terminé », vous l'écrivez, puis vous ajoutez une ligne : ce que vous feriez, et pour quand. C'est cette ligne-là qui transforme un aveu en position tenable.
+>
+> Organisez-vous à deux : l'un rédige, l'autre vérifie chaque réponse sur l'application qui tourne, sans faire confiance au code lu. Les deux noms figurent sur le document. Ce n'est pas de la défiance, c'est ce qu'on fait ici avant de sortir un élément de langage.
+>
+> Deux consignes de fond. Vous ne surestimez rien : si une fonctionnalité n'est pas terminée, elle n'est pas terminée. Et vous ne minimisez rien : si vous avez collecté une donnée, vous le dites. Je préfère cent fois porter une réponse gênante que devoir corriger une réponse fausse dans quarante-huit heures.
+>
+> Je sais que Florine vous a fixé midi sur autre chose. J'ai obtenu 19h, c'est tout ce que j'ai pu obtenir.
+>
+> Ce document ne sortira pas du cabinet sous votre nom. Il sert à préparer nos réponses, pas à vous exposer.
+>
+> Merci. Sincèrement.
+>
+> Benjamin Sellami - Conseiller en communication
+
+### 📌 Statut
+
+- [x] Réponse envoyée
+
+**Vérification double faite** avant envoi : les 12 réponses d'abord vérifiées par
+requête SQL directe sur les deux bases, `grep` sur tout le dépôt et `git log`/`git show`
+sur les commits datés, puis repassées à la main sur l'application qui tourne (Jad,
+2026-09-08) — notamment les points 5, 6, 9 et 11. La consigne de Benjamin (vérifier sur
+l'app, pas sur le code lu) est couverte des deux côtés.
+
+**Trouvaille du jour, corrigée dans le même commit (question 12)** : `prisma/seed.ts`
+contenait encore trois offres avec leurs anciennes coordonnées à l'adresse exacte,
+jamais mises à jour depuis la migration du 7 septembre. Un `npm run db:seed` les aurait
+réinjectées dans la base, en plus mal étiquetées « maille communale » à cause de la
+valeur par défaut du schéma. Corrigé.
+
+**Version ci-dessous : celle réellement envoyée**, retouchée par Jad avant expédition —
+Nicolas remplace Emma pour la vérification, quelques réponses reformulées, et
+l'attribution des sources allégée en passant (par exemple point 8, qui ne mentionne plus
+que la base en ligne).
+
+> Bonjour Monsieur Sellami,
+>
+> Voici les douze réponses accompagner de leur source. J'ai (Jad) rédiger, en même temps
+> que Nicolas mon collègue vérifier sur l'application qui tourne.
+>
+> **1. Un employeur doit-il payer pour publier une offre ?**
+> Non. `POST /api/jobs` ne contient pas de logique de paiement.
+>
+> **2. Un tarif a-t-il été implémenté à un moment donné ? Entre quelles dates ?**
+> Non pas en tant que logique fonctionnelle. Aucun paiement n'a été traité. Mais une
+> indication « Employer (€400/month) », a existé sur le formulaire d'inscription du
+> 3 septembre 10h28 au 7 septembre 22h51 (commits b6a530b et f11b8f2 consultable sur
+> Github).
+>
+> **3. Quelles données de localisation sont collectées, à quelle maille ?**
+> La position du visiteur, demandée seulement au clic sur « Offres près de moi »,
+> n'est jamais envoyée au serveur, elle est gardée en mémoire du navigateur
+> (`LocateMeButton.tsx`). Quant aux coordonnées des offres, elles sont géocodées depuis
+> le 7 septembre 18h24 (commit a0b4af2) au centroïde officiel de la commune via l'API
+> Adresse. Source : `geocode.ts`.
+>
+> **4. Ces données sont-elles conservées ? Depuis quand cette durée est-elle réellement
+> appliquée ?**
+> La position du visiteur n'est pas conservée depuis la construction de la
+> fonctionnalité. Les coordonnées d'offres sont conservées tant que l'offre existe, sans
+> limite de durée définie, mais la maille communale n'est effective que depuis le
+> 7-8 septembre.
+>
+> **5. L'application fonctionne-t-elle si l'utilisateur refuse la géolocalisation ?**
+> Oui. Un message de refus s'affiche, la consultation continue sans blocage ni erreur.
+> Source : fonction `decline()` dans `LocateMeButton.tsx`.
+>
+> **6. Un utilisateur peut-il être localisé à son adresse précise ?**
+> Non la position d'un visiteur n'est jamais stockée. Les offres, non plus depuis le
+> 7 septembre. Mais avant cette date elles l'étaient.
+>
+> **7. Un employeur peut-il voir où se trouve un candidat ?**
+> Non. Il n'y a aucun champ de localisation sur la table des comptes utilisateurs
+> (`schema.prisma`), et la fonctionnalité de candidature n'existe pas encore.
+>
+> **8. Combien de personnes sont réellement inscrites aujourd'hui ?**
+> 16 comptes sur la base en ligne (1 admin, 14 employeurs, 1 candidat). Source : base de
+> données Neon sur Vercel.
+>
+> **9. L'application est-elle en production, ou est-ce un démonstrateur ?**
+> Un démonstrateur technique. Comme écrit au pieds de toutes les pages publiques depuis
+> la requête d'un email précèdent. « Démonstrateur technique, ne constitue pas un
+> service public en exploitation. »
+>
+> **10. Qui a accès aux données en tant qu'administrateur, combien de comptes ?**
+> Un seul compte admin, sur les deux bases : testAdmin@gmail.com.
+>
+> **11. Un utilisateur peut-il supprimer son compte ? Disparaît-il vraiment, ou juste
+> désactivé ?**
+> Non, ni l'un ni l'autre. Nous n'avons pas encore rajouté de route de suppression.
+> Cependant un admin peut seulement suspendre un compte. Nous comptons rajouter cette
+> fonctionnalité.
+>
+> **12. Les coordonnées exactes de la semaine dernière existent-elles encore quelque
+> part ?**
+> Non, nous avons supprimé toutes coordonnées exactes existantes précédemment.
+>
+> Cordialement,
+> L'équipe ChomageGO
+
+⚠️ **le mail envoyé signe « L'équipe ChomageGO »**, pas GéoEmploi. Le nom a été retiré
+partout dans l'interface, le dépôt et les documents sur instruction de l'email 9
+(Mme Pontaillac, avec l'accord de M. Sellami lui-même) le 2026-09-07. Ce mail, adressé à
+M. Sellami en personne, reporte le nom qu'il a explicitement fait retirer. À corriger
+dans le prochain envoi — inutile de revenir sur celui-ci, déjà parti.
+>
+> > **📎 Pièces jointes**
+> > _aucune — document de préparation interne, pas destiné à sortir du cabinet_

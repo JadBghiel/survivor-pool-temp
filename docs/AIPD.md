@@ -130,11 +130,15 @@ trancher seuls, et que nous soumettons au service juridique.
 - Mots de passe hachés (bcrypt), jamais renvoyés par l'API
 - Suppression en cascade des données rattachées à un compte, câblée dès la première
   migration
+- Export des données personnelles sur demande (art. 20) : `GET /api/users/me/export`,
+  authentifié, strictement scopé au compte appelant. Un compte neuf sans activité
+  produit un export valide, testé. Les champs candidatures, historique de localisation
+  et trace de consentement sont toujours présents et toujours vides, avec leur raison,
+  plutôt que simplement absents
 
 **Engagées, à livrer**
 
 - Branchement effectif du tri par distance, pour que la collecte serve sa finalité
-- Export des données personnelles à la demande (art. 20)
 - Consultation permanente de la notice d'information depuis un espace de réglages
 - Mécanisme de suppression de compte accessible à l'utilisateur
 
