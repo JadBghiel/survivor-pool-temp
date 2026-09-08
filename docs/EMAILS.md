@@ -575,20 +575,18 @@ avec une offre publiée (export contenant exactement cette offre, aucune autre).
 
 - [x] Réponse envoyée
 
-**Les trois blocages sont levés (2026-09-07)** : clause d'abonnement retirée des CGU,
-captures de consentement reprises sur l'interface neutre, nom GéoEmploi appliqué dans
-les deux documents concernés. Prêt à envoyer — **vérifier que les 5 pièces jointes sont
-effectivement attachées avant expédition**, c'est exactement ce qui a manqué la
-première fois.
+**Envoyée le 2026-09-08.** Version raccourcie par rapport au brouillon d'origine : le
+paragraphe technique de fond (détail fiche de registre / audit RGAA / clauses CGU) a
+été retiré du corps du message avant envoi. Les quatre documents ont été joints en
+version PDF (convertis le jour même) plutôt qu'en `.md` comme prévu au départ.
 
 > Bonjour Madame Pontaillac,
 >
-> Toutes mes excuses pour cet envoi incomplet, et merci de me l'avoir signalé plutôt
-> que d'attendre. Les quatre livrables sont joints au présent message, vérifiés un par
-> un avant envoi.
+> Toutes mes excuses pour cet envoi incomplet. Les quatre livrables sont joints au
+> présent message.
 >
 > Trois d'entre eux ont été repris depuis votre première demande, pour tenir compte des
-> instructions reçues entre-temps :
+> instructions reçues entre temps :
 >
 > Le projet de CGU ne comporte plus de clause d'abonnement employeur. Elle est
 > remplacée par une clause de gratuité, conformément à votre instruction de retour à la
@@ -601,23 +599,16 @@ première fois.
 > Le nom du service est « GéoEmploi » dans l'ensemble des documents, comme dans
 > l'interface.
 >
-> Le contenu de fond des quatre livrables est inchangé par rapport à ce que je vous
-> décrivais : la fiche de registre détaille table par table ce que devient la position
-> du visiteur, et il n'y a pas de table, précisément — la coordonnée ne quitte jamais
-> le navigateur. L'audit RGAA signale toujours le défaut de comportement au clavier de
-> la fenêtre de connexion, avec la correction proposée. Chaque clause du projet de CGU
-> reste marquée « existant » ou « intention ».
->
 > Bien cordialement,
 > L'équipe GéoEmploi
 >
-> > **📎 Pièces jointes** — 5 fichiers, vérifiés avant envoi
-> > - [RGPD_FICHE_TRAITEMENT.md](RGPD_FICHE_TRAITEMENT.md)
-> > - [CONSENTEMENT_TABLEAU.md](CONSENTEMENT_TABLEAU.md)
+> > **📎 Pièces jointes** — 6 fichiers
+> > - [RGPD_FICHE_TRAITEMENT.pdf](RGPD_FICHE_TRAITEMENT.pdf)
+> > - [CONSENTEMENT_TABLEAU.pdf](CONSENTEMENT_TABLEAU.pdf)
 > > - [position-acceptee.png](CONSENTEMENT_SCREENSHOTS/position-acceptee.png)
 > > - [position-refusee.png](CONSENTEMENT_SCREENSHOTS/position-refusee.png)
-> > - [RGAA_AUDIT.md](RGAA_AUDIT.md)
-> > - [CGU_PROJET.md](CGU_PROJET.md)
+> > - [RGAA_AUDIT.pdf](RGAA_AUDIT.pdf)
+> > - [CGU_PROJET.pdf](CGU_PROJET.pdf)
 
 ---
 
