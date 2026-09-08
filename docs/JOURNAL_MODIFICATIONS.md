@@ -1,12 +1,8 @@
-# Journal des modifications — retour à la version 1.0
+# Journal des modifications: retour à la version 1.0
 
 Registre des retraits opérés sur GéoEmploi et de leur effet en base de données.
 Chaque ligne indique ce qui a été retiré, à quelle date, sur instruction de qui, et
 le nombre d'enregistrements supprimés ou modifiés.
-
-**Périmètre** : instruction de Mme Florine Pontaillac du 2026-09-07, portant l'accord de
-M. Thomas Vignal et de M. Benjamin Sellami — retour à la version 1.0 du cahier des
-charges (référence JEB/DNI/2026-001, 31 août 2026).
 
 ---
 
@@ -74,6 +70,24 @@ exactement la même coordonnée. Contrôle exécuté sur les deux bases —
 point sur la carte. C'est le comportement attendu de la maille communale, pas un
 défaut d'affichage.
 
+**Trouvaille en cours de route, corrigée le 2026-09-08** : le script de peuplement du
+dépôt (`prisma/seed.ts`) contenait encore trois offres avec leurs anciennes coordonnées
+à l'adresse exacte, codées en dur, jamais mises à jour lors de la reprise ci-dessus. Un
+`npm run db:seed` les aurait réinjectées dans la base — et, pire, mal étiquetées « maille
+communale » à cause de la valeur par défaut du schéma. Corrigé dans le commit `eda4fb9` :
+les trois offres pointent maintenant vers le même centroïde que la reprise, et la
+précision est fixée explicitement plutôt que laissée au défaut implicite.
+
+**Captures avant / après, une précision honnête** : les deux captures jointes montrent
+des offres différentes, pas la même offre à deux moments. La capture « avant »
+(2026-09-02, kit presse) montre plusieurs offres de Bordeaux dispersées dans différents
+quartiers. La capture « après » (2026-09-08) montre une offre précise sélectionnée,
+centrée sur le centroïde communal. Une paire « même offre, avant/après » à l'identique
+n'est plus reconstituable : la reprise étant irréversible, les anciennes coordonnées par
+offre n'existent plus nulle part pour recréer l'état d'origine à l'identique. La paire
+fournie montre néanmoins sans ambiguïté le changement : plusieurs points dispersés avant,
+un seul point partagé après.
+
 ---
 
 ## Ligne 5 — mécaniques de jeu : aucun enregistrement
@@ -118,11 +132,21 @@ diffusion et archivée dans le dépôt.
 
 ---
 
+## Page Transparence
+
+Ajoutée conformément à la demande, publique, sans compte requis :
+[`/transparence`](../src/app/transparence/page.tsx). Énonce la gratuité de la
+publication, la maille de localisation retenue, la durée de conservation par type de
+donnée, et le contact protection des données. Liée depuis la page d'accueil, en pied de
+page, à côté de la mention démonstrateur.
+
+---
+
 ## Portée du retrait
 
 Passé sur : interface, documentation, spécification OpenAPI, projet de CGU, jeu de
-données de démonstration, métadonnées et titre d'onglet, favicon, base de données
-locale et base en ligne.
+données de démonstration (y compris le script de peuplement, voir plus haut),
+métadonnées et titre d'onglet, favicon, base de données locale et base en ligne.
 
 Sans objet à ce jour, faute d'existence dans le produit : exports CSV et JSON,
 e-mails transactionnels, manifeste d'application, balises de partage.

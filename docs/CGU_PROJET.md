@@ -64,10 +64,13 @@ Un mécanisme de suppression de compte à la demande de l'utilisateur est prévu
 le cahier des charges. **Aucun bouton de suppression de compte n'existe
 aujourd'hui** dans l'interface.
 
-## 12. Modération et administration **[intention]**
+## 12. Modération et administration **[existant, mis à jour le 2026-09-08]**
 
-Un espace d'administration permettant la modération des offres et la gestion des
-comptes est prévu. **Il n'existe pas aujourd'hui.**
+Un espace d'administration permet à un compte administrateur de suspendre ou
+réactiver un compte utilisateur, et de modifier le statut de modération d'une offre
+(publiée, en attente, signalée). Chaque action est journalisée avec son auteur, sa
+cible et son horodatage. Cette clause était marquée **[intention]** jusqu'au
+2026-09-07 ; l'espace n'existait pas encore à la rédaction initiale de ce document.
 
 ## 13. Modification des CGU **[existant, clause standard]**
 

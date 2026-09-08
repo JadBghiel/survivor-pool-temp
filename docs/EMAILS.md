@@ -573,7 +573,7 @@ avec une offre publiée (export contenant exactement cette offre, aucune autre).
 
 ### 📌 Statut
 
-- [ ] Réponse envoyée
+- [x] Réponse envoyée
 
 **Les trois blocages sont levés (2026-09-07)** : clause d'abonnement retirée des CGU,
 captures de consentement reprises sur l'interface neutre, nom GéoEmploi appliqué dans
@@ -705,63 +705,57 @@ un point est du vrai travail :**
 
 ### 📌 Réponse 2 — livraison des retraits (à envoyer jeudi 15h00)
 
-- [ ] Réponse envoyée
+- [x] Réponse envoyée
 
-**État au 2026-09-07.** Fait : reprise des coordonnées (local + Neon), colonne de
-précision, retrait des mentions d'abonnement, renommage GéoEmploi, journal des
-modifications avec les décomptes. Reste à faire avant envoi : les deux captures d'une
-même offre avant/après (la capture « avant » est déjà prise), et la page Transparence.
+**Version ci-dessous : celle réellement envoyée**, retouchée par Jad avant expédition.
+Trois points du brouillon initial n'y figurent plus : le rappel de l'écart 32/32 entre
+les deux bases, la précision sur les captures avant/après (offres différentes, pas la
+même offre à deux moments), et la mention de la trouvaille sur `prisma/seed.ts`. Le
+travail correspondant reste fait et documenté dans `JOURNAL_MODIFICATIONS.md`, seule la
+lettre envoyée est plus courte.
 
 > Bonjour Madame Pontaillac,
 >
 > Comme annoncé lundi, voici la reprise complète.
 >
-> **Coordonnées ramenées à la maille communale.** C'est fait en base, sur les deux
-> bases — locale et en ligne — et de façon irréversible : les coordonnées d'adresse
-> d'origine ne sont conservées nulle part. 64 enregistrements modifiés au total, 32 sur
-> chaque base. Une colonne de précision de localisation a été ajoutée à la table des
-> offres, comme vous le demandiez ; après reprise, aucune offre n'y porte plus la valeur
-> « adresse exacte ». Le géocodage lui-même a été modifié : une offre publiée aujourd'hui
-> est géocodée à sa commune, l'adresse saisie n'étant plus convertie en coordonnées.
+> **Coordonnées ramenées à la maille communale** : Nous nous sommes assurés que les
+> coordonnées d'adresse d'origine ne sont conservées nulle part. Une colonne de
+> précision de localisation a été ajoutée à la table des offres, comme vous le
+> demandiez (visible sur le schéma). Après reprise, aucune offre n'y porte plus la
+> valeur " adresse exacte". Nous avons aussi modifié le géocodage afin qu'une offre
+> publiée soit géocodée à sa commune, l'adresse saisie n'étant plus convertie en
+> coordonnées.
 >
-> Le journal des modifications joint donne le décompte commune par commune, avec l'écart
-> moyen et l'écart maximum entre l'ancienne position et le centroïde. Il va de 1,11 km à
-> Lyon à 3,89 km en moyenne à Marseille.
+> Le journal des modifications en pièce jointe donne le décompte commun par commune,
+> avec l'écart moyen et l'écart maximum entre l'ancienne position et le centroïde. Il va
+> de 1,11 km à Lyon à 3,89 km en moyenne à Marseille.
 >
-> Un point que je préfère signaler : les deux bases contiennent chacune 32 offres, mais
-> leur répartition diffère légèrement — 11 offres à Bordeaux en local contre 12 en ligne,
-> une offre à Nantes en local contre une à Tours en ligne. Cet écart préexistait à la
-> reprise et ne résulte pas d'elle. Le journal présente les deux décomptes séparément
-> plutôt qu'un total unique qui masquerait la différence.
+> **Mentions d'abonnement** : Nous avons retirées de l'interface, du projet de CGU et de
+> la documentation. La clause "Abonnement employeur" des CGU est remplacée par une
+> clause de gratuité.
 >
-> **Mentions d'abonnement.** Retirées de l'interface, du projet de CGU et de la
-> documentation. La clause « Abonnement employeur » des CGU est remplacée par une clause
-> de gratuité.
+> **Nom** : "GéoEmploi" dans l'interface, les métadonnées, le titre d'onglet, la
+> documentation de l'API et les documents.
 >
-> **Nom.** « GéoEmploi » dans l'interface, les métadonnées, le titre d'onglet, la
-> documentation de l'API et les documents. Le nom de travail précédent ne subsiste que
-> dans l'historique du dépôt et dans les documents archivés, qui ne sont plus diffusés.
+> **Mécaniques de jeu et abonnement, sort des enregistrements.** Aucun enregistrement
+> n'a jamais été produit par ces mécaniques, ni par l'abonnement. Elles n'ont jamais été
+> développées, la réalité augmentée a fait l'objet d'une proposition écrite au Ministre
+> restée sans suite, et la mention tarifaire était un libellé d'interface sans
+> traitement derrière. Il n'y a donc pas eu de suppression nécessaire sur cette partie.
 >
-> **Mécaniques de jeu et abonnement, sort des enregistrements.** Ma réponse en trois
-> lignes, comme demandé : aucun enregistrement n'a jamais été produit par ces
-> mécaniques, ni par l'abonnement. Elles n'ont jamais été développées — la réalité
-> augmentée a fait l'objet d'une proposition écrite au Ministre restée sans suite, et la
-> mention tarifaire était un libellé d'interface sans traitement derrière. Il n'y a donc
-> ni suppression ni anonymisation à trancher, faute d'objet ; le constat est vérifiable
-> dans le schéma de base de données et l'historique du dépôt.
+> **Page Transparence** : Nous avons rajouter une page /transparence, accessible depuis
+> l'accueil sans compte. Elle énonce la gratuité de la publication, la maille communale,
+> la durée de conservation par type de donnée, et le contact protection des données.
 >
-> **Ce que la vidéo diffusée montre encore.** Le bloc-marque du Ministère, le nom
-> précédent, et des offres positionnées à l'adresse exacte. Elle a été tournée avant vos
-> deux instructions. Conformément à votre demande, elle n'a pas été retouchée : elle est
-> retirée de la diffusion et archivée.
+> Vous retrouverez en pièce jointes, deux capture d'écran, avant et après les
+> modifications dde la maille communes, ainsi que le journal de modifications.
 >
-> Bien cordialement,
-> L'équipe GéoEmploi
+> Bien cordialement, L'équipe GéoEmploi
 >
 > > **📎 Pièces jointes**
-> > - [JOURNAL_MODIFICATIONS.md](JOURNAL_MODIFICATIONS.md) — journal des modifications avec les décomptes
-> > - _capture avant / après d'une même offre — à joindre_
-> > - _page Transparence — à joindre_
+> > - [JOURNAL_MODIFICATIONS.pdf](JOURNAL_MODIFICATIONS.pdf) — journal des modifications avec les décomptes
+> > - [avant-maille-communale.png](RETRAIT_MAILLE_COMMUNALE/avant-maille-communale.png)
+> > - [apres-maille-communale.png](RETRAIT_MAILLE_COMMUNALE/apres-maille-communale.png)
 
 ---
 
