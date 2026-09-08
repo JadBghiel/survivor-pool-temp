@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import JobsView from './JobsView'
 import { AuthHeader } from '@/components/AuthHeader'
@@ -47,7 +48,15 @@ export default async function Home() {
         {/* temporary spot, milestone 1 moves this button onto the map itself */}
       </header>
       <JobsView jobs={jobs} />
-      <DemoNotice className="mt-10 border-t border-neutral-200 pt-4 dark:border-neutral-800" />
+      <div className="mt-10 flex items-center justify-between border-t border-neutral-200 pt-4 dark:border-neutral-800">
+        <DemoNotice />
+        <Link
+          href="/transparence"
+          className="text-xs underline underline-offset-4 text-[var(--color-accent)]"
+        >
+          Transparence
+        </Link>
+      </div>
     </main>
   )
 }
