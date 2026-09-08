@@ -17,6 +17,17 @@ enum Role {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum JobStatus {
+  PUBLISHED
+  PENDING
+  FLAGGED
+}
+
 enum ContractType {
   CDI
   CDD
@@ -25,17 +36,29 @@ enum ContractType {
   FREELANCE
 }
 
+// 3.2, cahier des charges v1.0: precision minimale = commune. l'email 9 (mme
+// pontaillac, 2026-09-07) precise l'application: une offre s'affiche au centroide
+// de sa commune, jamais a l'adresse exacte. EXACT documente l'ancien etat
+// (pre-2026-09-08), pour la reprise et le journal des modifications uniquement, 
+// plus aucune offre ne doit etre en EXACT apres la migration.
+enum LocationPrecision {
+  EXACT
+  MUNICIPALITY
+}
+
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
   passwordHash String
   role         Role
+  status       UserStatus @default(ACTIVE)
   createdAt    DateTime  @default(now())
   // 3.3 - account deletion must cascade, wired from day one
   deletedAt    DateTime?
 
   seekerProfile   SeekerProfile?
   employerProfile EmployerProfile?
+  auditLogs AuditLog[]
 }
 
 model SeekerProfile {
@@ -65,6 +88,7 @@ model Job {
   title        String
   description  String
   contractType ContractType
+  status       JobStatus   @default(PUBLISHED)
   address      String
   city         String
   postalCode   String
@@ -72,6 +96,8 @@ model Job {
   // bbox query on the viewport, no postgis needed at this scale.
   latitude     Float
   longitude    Float
+  // toujours le centroide de la commune depuis le 2026-09-08, jamais l'adresse
+  locationPrecision LocationPrecision @default(MUNICIPALITY)
   radiusKm     Int          @default(0)
   createdAt    DateTime     @default(now())
   // 2.2 - listings older than 30 days are archived. week 2 turns this into a job,
@@ -82,4 +108,15 @@ model Job {
 
   // the map query is always "visible jobs in this bounding box"
   @@index([archivedAt, latitude, longitude])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  target    String
+  actor     String
+  timestamp DateTime @default(now())
+  actorId   String?
+
+  user User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
 }

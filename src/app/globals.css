@@ -1,14 +1,23 @@
 @import "tailwindcss";
 
+/* identite neutre, 2026-09-07 (email 7 de benjamin sellami): plus aucune police ni
+   couleur de l'Etat. Marianne/Spectral retirees, plus aucun @font-face - on s'appuie
+   sur la pile systeme, donc aucun fichier de police n'est telecharge ni servi. */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* couleur primaire du demonstrateur - teal, volontairement eloignee du bleu
+     institutionnel #1B3A6B qui a ete retire */
+  --color-accent: #0f766e;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-accent: var(--color-accent);
+  --font-sans: var(--font-ui);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -16,13 +25,19 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* teal plus clair en sombre, pour garder le contraste AA */
+    --color-accent: #2dd4bf;
   }
+}
+
+html {
+  font-size: 110%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui);
 }
 
 .user-pulse {
