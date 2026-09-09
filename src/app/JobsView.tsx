@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import JobsMap from './JobsMapClient'
 import { LocateMeButton } from '@/components/LocateMeButton'
+import { useCurrentUser } from '@/lib/useCurrentUser'
 
 type Job = {
     id: string
@@ -15,13 +16,14 @@ type Job = {
     address: string
     postalCode: string
     radiusKm: number
-    createdAt: string
+    createdAt: Date
     employer: { companyName: string }
 }
 
 export default function JobsView({ jobs }: { jobs: Job[] }) {
   // aquí guardaremos la oferta seleccionada (por ahora sin usar)
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
+    const { user } = useCurrentUser()
 
     const [userPosition, setUserPosition] = useState<{ lat: number; lng: number } | null>(null)
 
@@ -29,6 +31,20 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
     const cardRefs = useRef<Record<string, HTMLLIElement | null>>({})
     const detailsRef = useRef<HTMLDialogElement>(null)
     const selectedJob = jobs.find((j) => j.id === selectedJobId) ?? null
+
+    // prevenitng view farming
+    const countedJobIds = useRef<Set<string>>(new Set())
+
+    // only counts when oening the job post (and the window pops up)
+    const openJobDetails = (id: string) => {
+        setSelectedJobId(id)
+        detailsRef.current?.showModal()
+        if (user?.role !== 'SEEKER') return
+        if (countedJobIds.current.has(id)) return
+        countedJobIds.current.add(id)
+        const token = localStorage.getItem('token')
+        fetch(`/api/jobs/${id}/view`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => {})
+    }
 
     // cuando cambia la selección, desliza la lista hasta esa tarjeta
     useEffect(() => {
@@ -65,10 +81,7 @@ export default function JobsView({ jobs }: { jobs: Job[] }) {
                 <li
                 key={job.id}
                 ref={(el) => { cardRefs.current[job.id] = el }}
-                onClick={() => {
-                    setSelectedJobId(job.id)
-                    detailsRef.current?.showModal()
-                }}
+                onClick={() => openJobDetails(job.id)}
                 className={`cursor-pointer rounded-lg border p-4 transition-colors ${
                     selectedJobId === job.id
 
