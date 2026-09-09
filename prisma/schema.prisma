@@ -99,6 +99,8 @@ model Job {
   // toujours le centroide de la commune depuis le 2026-09-08, jamais l'adresse
   locationPrecision LocationPrecision @default(MUNICIPALITY)
   radiusKm     Int          @default(0)
+  // view count fed from POST /jobs/{id}/view,  read by employer dash
+  viewCount    Int          @default(0)
   createdAt    DateTime     @default(now())
   // 2.2 - listings older than 30 days are archived. week 2 turns this into a job,
   // the column exists now so it is a one line filter, not a migration.
