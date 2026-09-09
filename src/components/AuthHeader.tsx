@@ -65,6 +65,14 @@ export function AuthHeader() {
             )}
             {user.role === 'EMPLOYER' && (
               <button
+                onClick={() => router.push('/employer')}
+                className="rounded bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+              >
+                Tableau de bord
+              </button>
+            )}
+            {user.role === 'EMPLOYER' && (
+              <button
                 onClick={() => setIsPublishOpen(true)}
                 className="rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
