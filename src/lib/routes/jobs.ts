@@ -81,6 +81,25 @@ const getJob = createRoute({
   },
 })
 
+// 2.employer dash shows view count from seekers only
+// so crezting this route for view count
+const countJobView = createRoute({
+  method: 'post',
+  path: '/jobs/{id}/view',
+  tags: ['jobs'],
+  summary: 'Count one view on a job listing',
+  description:
+    'requires a SEEKER bearer token, so an anonymous script cannot farm views. ' +
+    'increments a per listing counter only, stores nothing about which seeker viewed it',
+  request: { params: JobSummarySchema.pick({ id: true }) },
+  responses: {
+    204: { description: 'View counted' },
+    401: { content: { 'application/json': { schema: ErrorSchema } }, description: 'missing or invalid token' },
+    403: { content: { 'application/json': { schema: ErrorSchema } }, description: 'only seekers count as a view' },
+    404: { content: { 'application/json': { schema: ErrorSchema } }, description: 'No such listing' },
+  },
+})
+
 // prisma row -> api shape. the api never leaks column names or the employer id.
 type JobRow = {
   id: string
@@ -218,4 +237,21 @@ jobs.openapi(getJob, async (c) => {
   const row = await prisma.job.findFirst({ where: { id, archivedAt: null, status: 'PUBLISHED' }, select })
   if (!row) return c.json({ error: 'not found' }, 404)
   return c.json(toSummary(row), 200)
+})
+
+jobs.openapi(countJobView, async (c) => {
+  const payload = await verifyActiveUser(c.req.header('Authorization'))
+  if (!payload) return c.json({ error: 'missing or invalid token' }, 401)
+  if (payload.role !== 'SEEKER') return c.json({ error: 'only seekers count as a view' }, 403)
+
+  const { id } = c.req.valid('param')
+
+  // updateMany: ++ job view count in db if its public
+  const { count } = await prisma.job.updateMany({
+    where: { id, archivedAt: null, status: 'PUBLISHED' },
+    data: { viewCount: { increment: 1 } },
+  })
+  if (count === 0) return c.json({ error: 'not found' }, 404)
+
+  return c.body(null, 204)
 })
