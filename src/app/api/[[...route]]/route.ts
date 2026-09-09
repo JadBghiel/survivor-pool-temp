@@ -5,6 +5,7 @@ import { jobs } from '@/lib/routes/jobs'
 import { authApp } from '@/lib/routes/auth'
 import { adminApp } from '@/lib/routes/admin'
 import { exportApp } from '@/lib/routes/export'
+import { employerApp } from '@/lib/routes/employer'
 
 // prisma + pg need a real node runtime, not the edge one.
 export const runtime = 'nodejs'
@@ -15,6 +16,7 @@ app.route('/', jobs)
 app.route('/', authApp)
 app.route('/', adminApp)
 app.route('/', exportApp)
+app.route('/', employerApp)
 
 // 3.1 - documented restful api. the spec is generated from the same zod schemas
 // the handlers validate with, so it is always in sync with the code.
