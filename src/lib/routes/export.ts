@@ -41,17 +41,6 @@ const ExportSchema = z
         ),
       })
       .nullable(),
-    applications: z.array(z.unknown()).openapi({
-      description: "toujours vide: la fonctionnalite de candidature n'existe pas dans l'application",
-    }),
-    locationHistory: z.array(z.unknown()).openapi({
-      description:
-        "toujours vide: aucun historique de localisation n'est jamais enregistre, voir RGPD_FICHE_TRAITEMENT.md",
-    }),
-    consentRecords: z.array(z.unknown()).openapi({
-      description:
-        'toujours vide: le consentement de geolocalisation est redemande a chaque usage, jamais persiste',
-    }),
   })
   .openapi('PersonalDataExport')
 
@@ -62,10 +51,11 @@ const exportRoute = createRoute({
   summary: 'Export all personal data held for the authenticated account (RGPD art. 20)',
   description:
     'requires a bearer token, returns only data belonging to the caller. ' +
-    'applications, locationHistory and consentRecords are always empty arrays: ' +
-    'the app does not implement applications and never stores location history ' +
-    'or a consent trace. a brand new account with no activity still returns 200 ' +
-    'with a valid, populated account/profile shape - never an error.',
+    'the export reflects only data categories the service actually holds: no ' +
+    'applications, location history or consent trace fields, since none of ' +
+    'those are ever stored (see RGPD_FICHE_TRAITEMENT.md and AIPD.md). ' +
+    'a brand new account with no activity still returns 200 with a valid, ' +
+    'populated account/profile shape - never an error.',
   responses: {
     200: { content: { 'application/json': { schema: ExportSchema } }, description: 'personal data export' },
     401: { content: { 'application/json': { schema: ErrorSchema } }, description: 'missing or invalid token' },
@@ -121,9 +111,6 @@ exportApp.openapi(exportRoute, async (c) => {
             })),
           }
         : null,
-      applications: [],
-      locationHistory: [],
-      consentRecords: [],
     },
     200,
   )
