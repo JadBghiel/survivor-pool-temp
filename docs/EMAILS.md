@@ -432,6 +432,14 @@ avec une offre publiée (export contenant exactement cette offre, aucune autre).
 > pas encore, les deux autres ne sont jamais enregistrées. Un compte neuf sans activité
 > produit un export valide et complet, testé.
 >
+> **⚠️ corrigé le 2026-09-10, suite au retour de Mme Pontaillac ci-dessous** : les trois
+> listes vides (`applications`, `locationHistory`, `consentRecords`) ont été retirées de
+> l'export. Elle a raison sur le principe — un export de données personnelles ne doit
+> refléter que ce qui existe réellement, pas des catégories inexistantes présentées comme
+> des tableaux vides. `src/lib/routes/export.ts` ne renvoie plus que `account`,
+> `seekerProfile` et `employerProfile`. Vérifié après correction : un compte neuf produit
+> toujours un export valide, sans les trois champs retirés.
+>
 > Ce qui manque encore est le déclenchement depuis l'espace personnel — l'endpoint
 > existe, l'écran qui l'appellerait n'existe pas.
 >
@@ -452,6 +460,48 @@ avec une offre publiée (export contenant exactement cette offre, aucune autre).
 > > **📎 Pièces jointes**
 > > - [AIPD.md](AIPD.md) — analyse d'impact, 3 pages
 > > - [RGPD_FICHE_TRAITEMENT.md](RGPD_FICHE_TRAITEMENT.md) — pour mémoire, à l'appui du point 2
+
+### Retour de Mme Pontaillac — 2026-09-10
+
+> Bonjour,
+>
+> J'ai bien reçu votre retour.
+>
+> L'absence de purge est cohérente dès lors qu'aucune position n'est persistée. En
+> revanche, pour l'export, évitez d'inclure des catégories de données inexistantes sous
+> forme de listes vides : l'export doit refléter les données réellement détenues par le
+> service.
+>
+> Pour la mention d'information, son affichage avant chaque demande de géolocalisation
+> est satisfaisant.
+>
+> Bien cordialement,
+>
+> Florine Pontaillac - Conseillère juridique
+> Cabinet du Ministre - Ministère du Job et Bonheur
+
+- [x] Réponse envoyée
+
+corrigé avant réponse, pas seulement promis : voir la note du 2026-09-10 dans le point 3
+ci-dessus. `applications`, `locationHistory` et `consentRecords` retirés de
+`GET /api/users/me/export`, vérifié sur un compte neuf après correction.
+
+> Bonjour Madame Pontaillac,
+>
+> Merci pour ce retour, et pour la validation sur la purge et sur la mention
+> d'information.
+>
+> Sur l'export, vous avez raison, et c'est corrigé. Les trois listes vides ont été
+> retirées : l'export ne contient plus que le compte, le profil, et pour un employeur ses
+> propres offres publiées, c'est-à-dire exactement ce que le service détient réellement.
+> Vérifié à nouveau après correction sur un compte neuf sans activité, qui produit
+> toujours un export valide.
+>
+> Bien cordialement,
+> L'équipe GéoEmploi
+>
+> > **📎 Pièces jointes**
+> > _aucune_
 
 ---
 
@@ -886,3 +936,83 @@ dans le prochain envoi — inutile de revenir sur celui-ci, déjà parti.
 >
 > > **📎 Pièces jointes**
 > > _aucune — document de préparation interne, pas destiné à sortir du cabinet_
+
+---
+
+## 📧 Email 11 — Jean-Eudes Berlier (« Le Défi du Jour »)
+**Reçu le 2026-09-10**
+
+> Bonjour l'équipe,
+>
+> Jean-Eudes Berlier. J'ai regardé votre application hier soir, dans sa nouvelle version « conforme ».
+>
+> C'est propre. C'est carré. C'est mort.
+>
+> Une carte, des points, une liste. On a enlevé tout ce qui donnait envie de l'ouvrir deux fois. Je comprends les contraintes, je les ai acceptées : pas de capture, pas de réalité augmentée, pas de collection. Très bien. J'ai signé.
+>
+> Mais nulle part il n'est écrit qu'un service public doit être ennuyeux. Alors j'ai trouvé la solution, et elle rentre dans les règles. J'ai même vérifié avec Florine avant de vous écrire, ce qui, vous en conviendrez, montre des progrès.
+>
+> **Le Défi du Jour**
+>
+> Chaque jour, l'application propose à l'utilisateur un objectif simple, non obligatoire, et sans aucune conséquence sur ses droits :
+>
+> « Consultez 3 offres dans un secteur que vous ne visiez pas »
+> « Mettez à jour une compétence de votre profil »
+> « Explorez les offres d'une commune voisine »
+>
+> Ce que je veux, concrètement :
+>
+> Un encart « Défi du Jour » sur l'écran d'accueil du demandeur d'emploi, avec le défi, une barre de progression et un état terminé.
+>
+> Une progression qui compte pour de vrai. Si le défi dit trois offres, ce sont trois offres différentes, réellement consultées par cette personne. Pas la même ouverte trois fois, pas dix rafraîchissements de page qui font monter la barre à chaque fois. On me dira que c'est truqué au premier journaliste qui essaiera, et il essaiera. La progression survit à une fermeture d'onglet et à une reconnexion, et elle repart à zéro à minuit. Minuit heure de Paris, évidemment.
+>
+> Une liste de défis administrable : l'admin ajoute, modifie, désactive un défi. Pas de défis écrits en dur dans le code, on va vouloir les changer souvent. Et je veux pouvoir préparer la semaine à l'avance, un défi par jour, avec une date, et que ça se déclenche tout seul le matin sans que personne n'ait à cliquer. Je ne serai pas devant mon écran à 6h.
+>
+> Un historique personnel des trente derniers jours, visible par l'utilisateur seul.
+>
+> Un bouton « masquer les défis » qui les fait disparaître définitivement pour cet utilisateur. Je le précise parce que Florine y tenait : c'est une option, pas une obligation. Aucun classement, aucun comparatif entre utilisateurs, aucun affichage public, aucun lien avec quoi que ce soit d'administratif. Et « disparaître », ça veut dire partout : l'accueil, la version mobile, les e-mails que l'application envoie, et tout écran où vous auriez eu la bonne idée d'en glisser un rappel.
+>
+> Dans l'administration, le nombre d'utilisateurs qui ont masqué les défis. Si les gens détestent, je veux le savoir avant les journalistes.
+>
+> Voilà. On ne chasse plus personne, on ne collectionne plus rien, et pourtant l'application redevient vivante. C'est exactement ce que j'appelle transformer une contrainte en opportunité. Notez-le pour plus tard, dans vos carrières.
+>
+> Livrable jeudi matin. Et je vous préviens tout de suite : ça doit marcher sur un compte neuf et vide, pas seulement sur celui que vous aurez préparé la veille. J'ai déjà vu trop de démonstrations qui tenaient sur un seul compte.
+>
+> Franchement, à quatre, c'est l'affaire d'une journée. Et ça change tout au produit.
+>
+> Jean-Eudes Berlier
+> Ministre du Job et Bonheur
+
+### 📌 Statut
+
+- [ ] Réponse envoyée
+
+Refus poli, motivé par le délai. Le périmètre réel derrière « un encart avec
+une barre de progression » : un modèle de données pour les défis, un écran
+d'administration pour les créer/planifier, un déclenchement automatique
+programmé (minuit heure de Paris), un suivi par utilisateur qui distingue
+trois offres différentes de la même offre rouverte trois fois, une
+persistance qui survit à la déconnexion, un historique de 30 jours, une
+préférence de masquage qui doit être respectée sur chaque écran existant et
+futur, et un compteur admin du nombre de masquages. Rien de tout ça n'existe
+aujourd'hui, y compris les fondations (aucun écran de profil éditable pour
+le premier exemple de défi cité). Jeudi matin ne suffit pas pour livrer
+quelque chose qui tient sur un compte neuf, ce qu'il demande explicitement.
+
+> Bonjour Monsieur le Ministre,
+>
+> Merci pour ce message, et pour avoir vérifié le principe avec Madame Pontaillac avant de nous l'envoyer.
+>
+> Malheureusement, nous somme dans le regret de vous annoncer que nous ne pourrons pas livrer le Défi du Jour jeudi matin Faute de temps, cette nouvelle fonctionnalité, tant intéressante soit elle, représente un travail considérable pour nos équipes. Cette dernière constitue sa propre logique de données, son propre écran d'administration, une planification automatique quotidienne, et un suivi par utilisateur qui doit rester correct même en cas de fermeture d'onglet ou de reconnexion. Chacun de ces éléments demande d'être construit et vérifié, ce qui prendra un temps notable.
+>
+> Pour donner une idée concrète du travail que cela représente : le principe que vous demandez, « trois offres différentes réellement consultées, pas la même offre rouverte trois fois », suppose que l'on sache déjà distinguer une consultation d'une autre. Ce mécanisme n'existe pas encore ailleurs dans l'application, il faudrait le construire pour cette fonctionnalité en particulier, avant même de pouvoir l'y brancher.
+>
+> Nous regrettons sincèrement ce manque de temps, mais nos équipes se sont engagé à rendre un travail de qualité pour les millions d'employer et de demandeur d'emploi de ce pays voué à utiliser cette plateforme.
+>
+> Si cette fonctionnalité reste souhaitée et que plus de temps est accorder,  nous serons ravi de pouvoir l'implementer, dès que vous le jugerez utile.
+>
+> Bien cordialement,
+> L'équipe GéoEmploi
+>
+> > **📎 Pièces jointes**
+> > _aucune_
